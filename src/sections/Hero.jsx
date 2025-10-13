@@ -1,3 +1,4 @@
+// src/sections/Hero.jsx
 import "./Hero.css";
 
 const Hero = () => {
@@ -5,21 +6,26 @@ const Hero = () => {
     <header id="home" className="hero">
       <div className="hero-inner">
         <div className="hero-text">
-          <p className="hero-tag">Full-Stack Developer (MERN & Java/Spring Boot)</p>
+          <p className="hero-tag">Full-Stack Developer (MERN & Next.js)</p>
 
           <h1 className="hero-title">
             Hi, I’m <span className="accent">Haileyesus Mesfin</span>.
           </h1>
 
           <p className="hero-sub">
-            I design and build <strong>fast, modern, and user-friendly web applications</strong> 
-            using <strong>React, Node.js, MongoDB</strong>, and <strong>Java/Spring Boot</strong>.  
-            Passionate about clean code, performance, and real-world solutions.
+            I build <strong>fast, scalable, and user-friendly web applications</strong> 
+            using <strong>React, Next.js, Node.js</strong>, and <strong>MongoDB</strong>. 
+            Passionate about <strong>clean code</strong>, <strong>performance</strong>, 
+            and creating <strong>real-world solutions</strong>.
           </p>
 
           <div className="hero-actions">
-            <a href="#projects" className="btn primary" aria-label="View my projects">View Projects</a>
-            <a href="#contact" className="btn ghost" aria-label="Contact me">Contact Me</a>
+            <a href="#projects" className="btn primary" aria-label="View my projects">
+              View Projects
+            </a>
+            <a href="#contact" className="btn ghost" aria-label="Contact me">
+              Contact Me
+            </a>
           </div>
 
           {/* Scroll indicator */}

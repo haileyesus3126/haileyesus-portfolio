@@ -5,7 +5,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-inner">
         <p className="copy">
-  Crafted with ❤️ by Haileyesus | MERN & Java Developer
+  Crafted with ❤️ by Haileyesus | MERN & Next.js Developer
 </p>
 
         <ul className="footer-socials">

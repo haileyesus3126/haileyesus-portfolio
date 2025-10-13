@@ -1,15 +1,18 @@
 import { useEffect } from "react";
+import { useReducedMotion } from "framer-motion";
 import "./Skills.css";
 
 const SKILLS = {
-  Frontend: ["HTML", "CSS", "JavaScript", "React", "Bootstrap"],
-  Backend: ["Node.js", "Express.js", "Java", "Spring Boot"],
-  Database: ["MongoDB", "MySQL"],
-  "Tools & Others": ["Git", "GitHub", "VS Code", "Postman", "REST APIs"],
+  Frontend: ["HTML", "CSS", "JavaScript", "React", "Next.js", "Framer Motion"],
+  Backend: ["Node.js", "Express.js", "REST APIs", "Auth (JWT)", "Stripe", "Socket.io"],
+  Database: ["MongoDB", "Mysql"],
+  "Tools & Platforms": ["Git", "GitHub", "VS Code", "Postman", "Vercel"],
 };
 
 export default function Skills() {
-  // reveal-on-scroll
+  const reduce = useReducedMotion();
+
+  // reveal-on-scroll (kept lightweight)
   useEffect(() => {
     const els = document.querySelectorAll(".sk-reveal");
     const obs = new IntersectionObserver(
@@ -27,8 +30,9 @@ export default function Skills() {
     return () => obs.disconnect();
   }, []);
 
-  // tiny tilt
+  // 3D tilt (disabled for reduced motion)
   const onTilt = (e) => {
+    if (reduce) return;
     const card = e.currentTarget;
     const r = card.getBoundingClientRect();
     const px = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
@@ -44,20 +48,23 @@ export default function Skills() {
 
   return (
     <section id="skills" className="skills" aria-label="Skills">
-      <div className="skills-inner" onMouseMove={(e) => {
-        const r = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - r.left;
-        const y = e.clientY - r.top;
-        e.currentTarget.style.setProperty("--spot-x", `${x}px`);
-        e.currentTarget.style.setProperty("--spot-y", `${y}px`);
-      }}>
+      <div
+        className="skills-inner"
+        onMouseMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          const x = e.clientX - r.left;
+          const y = e.clientY - r.top;
+          e.currentTarget.style.setProperty("--spot-x", `${x}px`);
+          e.currentTarget.style.setProperty("--spot-y", `${y}px`);
+        }}
+      >
         <h2 className="skills-title">Skills</h2>
         <p className="skills-lead">
-          A snapshot of the technologies I work with as a{" "}
-          <strong>MERN stack</strong> and <strong>Java / Spring Boot</strong> developer.
+          A practical toolkit for building <strong>MERN</strong> and{" "}
+          <strong>Next.js</strong> applications — from modern UIs to secure APIs and deploys.
         </p>
 
-        <div className="skills-grid">
+        <div className="skills-grid" role="list" aria-label="Skill categories">
           {Object.entries(SKILLS).map(([category, items], i) => (
             <article
               key={category}
@@ -65,16 +72,24 @@ export default function Skills() {
               style={{ "--i": i }}
               onMouseMove={onTilt}
               onMouseLeave={resetTilt}
+              role="listitem"
+              aria-label={`${category} skills`}
             >
-              <h3 className="skills-head">{category}</h3>
+              <header className="skills-head">
+                <h3>{category}</h3>
+                <span className="pulse" aria-hidden="true" />
+              </header>
+
               <ul className="skills-list">
                 {items.map((skill) => (
                   <li key={skill} className="chip" title={skill}>
-                    <span className="dot" />
+                    <span className="dot" aria-hidden="true" />
                     {skill}
                   </li>
                 ))}
               </ul>
+
+              <span className="card-border" aria-hidden="true" />
             </article>
           ))}
         </div>
@@ -82,8 +97,14 @@ export default function Skills() {
         {/* toolbelt marquee */}
         <div className="skills-marquee" aria-hidden="true">
           <div className="track">
-            <span>HTML • CSS • JavaScript • React • Node • Express • MongoDB • Java • Spring Boot • MySQL • Git • Postman • REST APIs •</span>
-            <span>HTML • CSS • JavaScript • React • Node • Express • MongoDB • Java • Spring Boot • MySQL • Git • Postman • REST APIs •</span>
+            <span>
+              HTML • CSS • JavaScript • React • Next.js • Node • Express • MongoDB • Mysql • JWT •
+              Stripe • Socket.io • Git • GitHub • Vercel • Postman • REST APIs •
+            </span>
+            <span>
+              HTML • CSS • JavaScript • React • Next.js • Node • Express • MongoDB • Mysql • JWT •
+              Stripe • Socket.io • Git • GitHub • Vercel • Postman • REST APIs •
+            </span>
           </div>
         </div>
       </div>

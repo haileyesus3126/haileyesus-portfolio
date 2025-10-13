@@ -10,59 +10,59 @@ import inventoryApp from "../assets/projects/inventory-app.jpg";
 import socialApp from "../assets/projects/social-app.jpg";
 import chatApp from "../assets/projects/chat-app.jpg";
 
-// ====== DATA ======
+// ====== DATA (MERN & Next.js only) ======
 const PROJECTS = [
   {
-    title: "Task Management System",
-    desc: "Full-stack app with role-based dashboards, task assignment, file uploads, and progress tracking.",
-    tech: ["Java", "Spring Boot", "MySQL", "Thymeleaf"],
+    title: "Techno Delivery — Food Delivery (MERN)",
+    desc: "End-to-end food delivery app: restaurant menus, cart & checkout, address management, order tracking, and secure payments.",
+    tech: ["MongoDB", "Express", "React", "Node", "Stripe"],
     image: taskSystem,
-    live: "#",
-    code: "https://github.com/yourname/task-management-system",
+    live: "#", // add your live demo when ready
+    code: "https://github.com/yourname/task-management-mern", // replace with your real repo
   },
   {
-    title: "Portfolio Website",
-    desc: "Personal portfolio built with React, responsive CSS, and smooth animations.",
-    tech: ["React", "CSS", "Vite"],
+    title: "Haileyesus.dev — Portfolio (Next.js)",
+    desc: "Developer portfolio with SSR/ISR, animated sections, and image optimization. Deployed on Vercel.",
+    tech: ["Next.js", "React", "CSS", "Vercel"],
     image: portfolio,
-    live: "#",
-    code: "https://github.com/yourname/portfolio",
+    live: "#", // e.g. https://haile-portfolio.vercel.app
+    code: "https://github.com/yourname/portfolio-next",
   },
   {
-    title: "MERN Blog Platform",
-    desc: "Full-stack blog with JWT authentication, CRUD posts, categories, and comments.",
-    tech: ["MongoDB", "Express", "React", "Node"],
+    title: "Banners Hallmark — Retail Website",
+    desc: "Responsive, SEO-friendly retail website for greeting cards & gifts with clean navigation and fast performance.",
+    tech: ["Next.js", "React", "CSS", "Vercel"],
     image: mernBlog,
-    live: "#",
-    code: "https://github.com/yourname/mern-blog",
+    live: "https://www.bannershallmark.com/",
+    code: "#", // add repo if public, otherwise keep '#'
   },
   {
-    title: "E-Commerce Website",
-    desc: "MERN-based store with cart, wishlist, filters, Stripe checkout, and admin panel.",
+    title: "StripeShop — E-Commerce (MERN + Stripe)",
+    desc: "Product catalog with filters, cart/wishlist, Stripe checkout, admin dashboard, and order management.",
     tech: ["MongoDB", "Express", "React", "Node", "Stripe"],
     image: ecommerce,
     live: "#",
     code: "https://github.com/yourname/ecommerce",
   },
   {
-    title: "Inventory & Invoice Manager",
-    desc: "Business-focused system to manage stock, suppliers, and generate invoices with PDF export.",
-    tech: ["Java", "Spring Boot", "MySQL", "React"],
+    title: "Task Managment System",
+    desc: "Task managment system for banners hallmark.",
+    tech: ["MongoDB", "Express", "React", "Node"],
     image: inventoryApp,
     live: "#",
-    code: "https://github.com/yourname/inventory-manager",
+    code: "https://github.com/yourname/inventory-manager-mern",
   },
   {
-    title: "Social Media App",
-    desc: "MERN social app with user profiles, posts, likes, comments, and real-time chat.",
+    title: "ConnectHub — Social App (MERN + Socket.io)",
+    desc: "Profiles, posts, likes, comments, and real-time chat/notifications.",
     tech: ["MongoDB", "Express", "React", "Node", "Socket.io"],
     image: socialApp,
     live: "#",
     code: "https://github.com/yourname/social-media-app",
   },
   {
-    title: "Real-Time Chat App",
-    desc: "Secure chat app with JWT authentication, private/group chats, and file sharing.",
+    title: "QuickChat — Real-Time Chat (MERN + WebSockets)",
+    desc: "Secure chat with JWT auth, private/group conversations, online presence, and file sharing.",
     tech: ["MongoDB", "Express", "React", "Node", "WebSockets"],
     image: chatApp,
     live: "#",
@@ -73,78 +73,87 @@ const PROJECTS = [
 // ====== ANIMATION VARIANTS ======
 const containerVariants = {
   hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
+  visible: { transition: { staggerChildren: 0.15 } },
 };
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
+  hidden: { opacity: 0, y: 30, scale: 0.98 },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.55, ease: "easeOut" },
   },
 };
 
 export default function Projects() {
   return (
-    <section id="projects" className="projects">
+    <section id="projects" className="projects" aria-labelledby="projects-title">
+      <div className="projects-aurora" aria-hidden="true" />
       <div className="projects-inner">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
+        <motion.header
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           viewport={{ once: true }}
         >
-          <h2 className="projects-title">Projects</h2>
+          <p className="eyebrow">Selected Work</p>
+          <h2 className="projects-title" id="projects-title">
+            MERN & <span className="grad">Next.js</span> Projects
+          </h2>
           <p className="projects-lead">
-            Selected work across <strong>MERN</strong> and{" "}
-            <strong>Java / Spring Boot</strong>.
+            Real-world apps focused on clean architecture, performance, and great UX.
           </p>
-        </motion.div>
+          <div className="projects-divider" aria-hidden="true">
+            <span className="line" />
+            <span className="glow" />
+          </div>
+        </motion.header>
 
         <motion.div
           className="projects-grid"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true }}
+          viewport={{ once: true, amount: 0.25 }}
+          aria-live="polite"
         >
           {PROJECTS.map((p, idx) => (
             <motion.article
               key={p.title + idx}
               className="project-card"
               variants={cardVariants}
-              whileHover={{ scale: 1.03, rotateX: 2, rotateY: -2 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
+              whileHover={{ scale: 1.02, rotateX: 1.5, rotateY: -1.5 }}
+              whileTap={{ scale: 0.995 }}
+              transition={{ type: "spring", stiffness: 220, damping: 16 }}
             >
+              {/* thumb */}
               <div className="project-thumb">
                 <img src={p.image} alt={p.title} loading="lazy" decoding="async" />
-                <span className="badge">{p.tech[0]}</span>
-                <span className="shine" />
+                <span className="badge" aria-hidden="true">{p.tech[0]}</span>
+                <span className="shine" aria-hidden="true" />
               </div>
 
+              {/* body */}
               <div className="project-body">
                 <h3 className="project-name">{p.title}</h3>
                 <p className="project-desc">{p.desc}</p>
 
-                <ul className="project-tech">
+                <ul className="project-tech" aria-label={`${p.title} technologies`}>
                   {p.tech.map((t) => (
-                    <li key={t}>{t}</li>
+                    <li key={t} className="pill">{t}</li>
                   ))}
                 </ul>
               </div>
 
+              {/* actions */}
               <div className="project-actions">
                 <a
                   className="btn primary"
                   href={p.live}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Live demo: ${p.title}`}
                 >
                   Live
                 </a>
@@ -153,10 +162,14 @@ export default function Projects() {
                   href={p.code}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={`Source code: ${p.title}`}
                 >
                   Code
                 </a>
               </div>
+
+              {/* animated border gradient */}
+              <span className="card-border" aria-hidden="true" />
             </motion.article>
           ))}
         </motion.div>

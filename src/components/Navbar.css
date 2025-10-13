@@ -28,7 +28,7 @@ section[id] { scroll-margin-top: 72px; }
 .brand {
   width: 48px; height: 48px; display: grid; place-items: center;
   border-radius: 12px; font-weight: 900; letter-spacing: .5px;
-  color: var(--text); text-decoration: none;
+  color: #4cc9f0;
   background: var(--card);
   border: 1px solid var(--card-line);
   box-shadow: var(--shadow-1);

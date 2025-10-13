@@ -141,7 +141,7 @@ export default function Navbar() {
     <nav className="navbar" role="navigation" aria-label="Primary">
       {/* Left: Brand */}
       <a className="brand" href="#home" aria-label="Go to Home" onClick={(e) => handleAnchorClick(e, "home")}>
-        HM
+        ኃ/የሱስ
       </a>
 
       {/* Center: Desktop links */}

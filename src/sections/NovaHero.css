@@ -1,150 +1,208 @@
-/* container with spotlight cursor */
+/* 🌌 Layout */
 .nova-hero {
   position: relative;
-  padding: clamp(80px, 12vw, 140px) 20px 110px;
-  background: var(--bg);
-  color: var(--text);
   overflow: hidden;
-  --spot-x: 50%;
-  --spot-y: 50%;
-}
-.nova-hero::before {
-  content: "";
-  position: absolute; inset: 0;
-  background:
-    radial-gradient(160px 160px at var(--spot-x) var(--spot-y),
-      color-mix(in oklab, var(--accent) 18%, transparent),
-      transparent 60%);
-  pointer-events: none;
-  opacity: .6;
-  transition: opacity .3s ease;
+  padding: clamp(80px, 12vw, 140px) 20px 100px;
+  color: #f4faff;
+  background: radial-gradient(
+      120px 120px at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgba(255, 255, 255, 0.1),
+      transparent 70%
+    ),
+    linear-gradient(135deg, #0b132b, #1c2541, #3a506b);
+  background-size: 400% 400%;
+  animation: bgShift 15s ease infinite;
 }
 
-/* subtle aurora backdrop */
-.nova-hero::after {
-  content: "";
-  position: absolute; inset: -20%;
-  background:
-    radial-gradient(40% 40% at 20% 20%, color-mix(in oklab, var(--accent) 28%, transparent), transparent 60%),
-    radial-gradient(40% 40% at 80% 80%, color-mix(in oklab, var(--accent-2) 24%, transparent), transparent 60%);
-  filter: blur(80px) saturate(1.1);
-  z-index: 0;
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* grid layout */
 .nova-inner {
-  position: relative; z-index: 1;
-  max-width: 1100px; margin: 0 auto;
-  display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(24px, 5vw, 44px);
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
   align-items: center;
 }
 
-/* text */
+@media (max-width: 920px) {
+  .nova-inner {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+/* ✨ Text */
 .kicker {
-  margin: 0 0 6px;
-  letter-spacing: .08em; text-transform: uppercase; font-weight: 700;
-  color: var(--accent);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+  color: #84d2ff;
 }
-.name { margin: 0 0 6px; line-height: .95; }
-.stroke {
+
+.name {
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  line-height: 1.1;
+  font-weight: 800;
+  background: linear-gradient(90deg, #4cc9f0, #4895ef, #64dfdf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.name .second {
   display: block;
-  font-weight: 900;
-  font-size: clamp(2.6rem, 7.2vw, 4.6rem);
-  color: transparent;
-  -webkit-text-stroke: 1.5px color-mix(in oklab, var(--text) 85%, transparent);
-  text-shadow: 0 10px 30px color-mix(in oklab, var(--text) 10%, transparent);
-}
-.stroke.second {
-  color: color-mix(in oklab, var(--text) 20%, transparent);
-  -webkit-text-stroke: 1px color-mix(in oklab, var(--text) 70%, transparent);
+  font-size: 0.9em;
+  font-weight: 700;
+  background: linear-gradient(90deg, #80ffdb, #56cfe1, #48bfe3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .role {
-  margin: 8px 0 12px;
-  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-  color: var(--muted);
+  font-size: 1.2rem;
+  margin-top: 0.6rem;
+  margin-bottom: 1.4rem;
+  color: #b8e1ff;
 }
+
 .cursor {
-  border-right: 2px solid var(--accent);
+  border-right: 2px solid #64dfdf;
   padding-right: 4px;
-  animation: caret 1s steps(1, end) infinite;
+  animation: blink 1s steps(1) infinite;
 }
-@keyframes caret { 50% { border-color: transparent; } }
+@keyframes blink { 50% { border-color: transparent; } }
 
 .blurb {
-  margin: 0 0 18px;
-  color: var(--muted);
-  max-width: 60ch;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.9;
+  color: #d9ecff;
+  max-width: 50ch;
 }
 
-.cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.cta-row {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.8rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
 
-/* visual: decorative hollow ring */
-.nova-visual { position: relative; justify-self: center; width: clamp(240px, 32vw, 360px); aspect-ratio: 1/1; }
-.ring.hollow {
-  position: absolute; inset: 0;
+.btn {
+  font-weight: 600;
+  border-radius: 14px;
+  padding: 0.85rem 1.4rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, #56cfe1, #4895ef);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(72, 149, 239, 0.3);
+}
+.btn.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(72, 149, 239, 0.5); }
+
+.btn.ghost {
+  border: 1px solid #64dfdf;
+  color: #64dfdf;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+.btn.ghost:hover { background: rgba(100, 223, 223, 0.15); color: #80ffdb; }
+
+/* 💫 Animated Visual (with photo) */
+.nova-canvas-wrap {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  width: min(45vw, 520px);
+  margin-inline: auto;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--accent), var(--accent-2), var(--accent));
-  mask: radial-gradient(farthest-side, transparent calc(50% - 14px), #000 calc(50% - 14px));
-  filter: drop-shadow(0 12px 28px color-mix(in oklab, var(--accent) 30%, transparent));
-  animation: spin 12s linear infinite;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 60% at 30% 25%, rgba(76, 201, 240, 0.22), transparent 60%),
+    radial-gradient(60% 60% at 70% 70%, rgba(72, 149, 239, 0.18), transparent 60%);
+  box-shadow:
+    0 0 32px rgba(76, 201, 240, 0.25),
+    inset 0 0 40px rgba(72, 149, 239, 0.20);
+  animation: float 6s ease-in-out infinite;
+  isolation: isolate;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* floating chips (fixed duplicates + positions + delays) */
-.chip {
-  position: absolute;
-  padding: 6px 10px;
-  font-size: .85rem;
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow-1);
-  animation: float 6s ease-in-out infinite alternate;
-}
-.chip-1 { top: -12px; left: 4px; }
-.chip-2 { bottom: -8px; left: 12px; animation-delay: .12s; }
-.chip-3 { top: 6px; right: -10px; animation-delay: .24s; }
-.chip-4 { bottom: 8px; right: 6px; animation-delay: .36s; }
-.chip-5 { top: 40%; left: -26px; animation-delay: .18s; }
-.chip-6 { bottom: 42%; right: -28px; animation-delay: .3s; }
-.chip-7 { top: -16px; left: 50%; transform: translateX(-50%); animation-delay: .42s; }
-.chip-8 { bottom: -18px; left: 50%; transform: translateX(-50%); animation-delay: .54s; }
 
 @keyframes float {
-  from { transform: translateY(0); }
-  to   { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(2.5deg); }
 }
 
-/* marquee */
-.marquee {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  overflow: hidden; border-top: 1px solid var(--line);
-  background: color-mix(in oklab, var(--surface) 80%, transparent);
-}
-.track {
-  display: flex; gap: 40px;
-  white-space: nowrap; padding: 10px 0;
-  animation: scroll 28s linear infinite;
-  color: var(--muted-2);
-}
-.track span { padding-left: 40px; }
-@keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-/* responsive */
-@media (max-width: 900px) {
-  .nova-inner { grid-template-columns: 1fr; text-align: center; }
-  .nova-visual { order: -1; margin-bottom: 14px; }
-  .cta-row { justify-content: center; }
+/* The constellation canvas (behind photo) */
+.nova-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
 }
 
-/* reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  .nova-hero::before,
-  .nova-hero::after,
-  .ring.hollow,
-  .chip,
-  .track { animation: none !important; }
+/* Your photo */
+.nova-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  z-index: 2;
+  transform: scale(1);
+  transition: transform 0.6s ease;
 }
+.nova-canvas-wrap:hover .nova-photo { transform: scale(1.04); }
+
+/* Soft overlay glow above the photo */
+.nova-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(76, 201, 240, 0.20), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(100, 223, 223, 0.18), transparent 70%);
+  mix-blend-mode: screen;
+  animation: pulseGlow 6s ease-in-out infinite alternate;
+}
+@keyframes pulseGlow {
+  0% { opacity: .35; transform: scale(1); }
+  100% { opacity: .75; transform: scale(1.05); }
+}
+
+/* Outer halo ring */
+.halo {
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  z-index: 0;
+  background:
+    radial-gradient(closest-side, rgba(140, 200, 255, 0.45), rgba(140, 200, 255, 0) 70%);
+  filter: blur(18px);
+  animation: haloSpin 12s linear infinite;
+}
+@keyframes haloSpin {
+  0% { transform: rotate(0deg); opacity: .55; }
+  50% { opacity: .85; }
+  100% { transform: rotate(360deg); opacity: .55; }
+}
+
+/* 🌠 Marquee */
+.marquee { margin-top: 4rem; overflow: hidden; opacity: .85; }
+.track { display: inline-flex; gap: 2rem; white-space: nowrap; animation: scroll 28s linear infinite; }
+.track span { letter-spacing: .08em; color: #a8dfff; text-shadow: 0 0 8px rgba(100, 223, 223, 0.3); }
+@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* 🌙 Reduced Motion */
+.nova-hero[data-reduced="true"] * { animation: none !important; }

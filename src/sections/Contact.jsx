@@ -62,7 +62,7 @@ export default function Contact() {
               <h3>Find me</h3>
               <ul className="socials">
                 <li>
-                  <a href="mailto:you@example.com">
+                  <a href="mailto:Haileyesus2024@gmail.com">
                     <i className="fa-solid fa-envelope"></i> Email
                   </a>
                 </li>
@@ -72,7 +72,7 @@ export default function Contact() {
                   </a>
                 </li>
                 <li>
-                  <a href="https://www.linkedin.com/in/yourname" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.linkedin.com/in/haileyesus3126" target="_blank" rel="noopener noreferrer">
                     <i className="fa-brands fa-linkedin"></i> LinkedIn
                   </a>
                 </li>

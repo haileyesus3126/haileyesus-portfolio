@@ -30,6 +30,7 @@
 .contact-title {
   margin: 0 0 8px;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
+  color: #4cc9f0;
 }
 .contact-lead {
   margin: 0 0 24px;

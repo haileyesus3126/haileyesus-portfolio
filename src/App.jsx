@@ -9,8 +9,6 @@ import Contact from './sections/Contact';
 import Footer from './components/Footer';
 
 function App() {
-  
-
   return (
     <div>
       <Navbar />
@@ -20,10 +18,6 @@ function App() {
  <Skills/>
  <Contact/>
  <Footer/>
-
-      
-
-     
     </div>
   );
 }
