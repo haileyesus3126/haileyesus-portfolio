@@ -1,14 +1,39 @@
 import { useEffect, useRef, useState } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useReducedMotion, motion } from "framer-motion";
 import "./NovaHero.css";
 import myphoto from "../assets/myphoto.jpg";
 
-const ROLES = ["Full-Stack Developer"];
+const ROLES = [
+  "Full-Stack JavaScript Developer",
+  "React & Next.js Developer",
+  "Problem Solver & Builder",
+];
 
 const MARQUEE_TEXT =
   "HTML • CSS • JavaScript • React • Next.js • Node • Express • MongoDB • REST APIs • Vercel •";
 
-// Accessible typewriter
+// Framer Motion variants (defined outside for performance)
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.3,
+      staggerChildren: 0.12,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 80, damping: 14 },
+  },
+};
+
+// Enhanced typewriter with optional reduced motion
 function useTypewriter(
   words,
   { pause = 1200, typingSpeed = 60, deletingSpeed = 35, enabled = true } = {}
@@ -18,10 +43,13 @@ function useTypewriter(
   const [del, setDel] = useState(false);
 
   useEffect(() => {
+    if (!words || words.length === 0) return;
+
     if (!enabled) {
       setTxt(words[i]);
       return;
     }
+
     let t;
     const full = words[i];
     const speed = del ? deletingSpeed : typingSpeed;
@@ -30,16 +58,23 @@ function useTypewriter(
       if (!del) {
         const next = full.slice(0, txt.length + 1);
         setTxt(next);
-        t = next === full ? setTimeout(() => setDel(true), pause) : setTimeout(step, speed);
+        if (next === full) {
+          t = setTimeout(() => setDel(true), pause);
+        } else {
+          t = setTimeout(step, speed);
+        }
       } else {
         const next = full.slice(0, txt.length - 1);
         setTxt(next);
         if (!next.length) {
           setDel(false);
           setI((v) => (v + 1) % words.length);
-        } else t = setTimeout(step, speed);
+        } else {
+          t = setTimeout(step, speed);
+        }
       }
     };
+
     t = setTimeout(step, speed);
     return () => clearTimeout(t);
   }, [txt, del, i, words, pause, typingSpeed, deletingSpeed, enabled]);
@@ -47,19 +82,59 @@ function useTypewriter(
   return txt;
 }
 
+// Magnetic button component
+const MagneticButton = ({ children, className, ...props }) => {
+  const ref = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouse = (e) => {
+    if (!ref.current) return;
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.08, y: middleY * 0.08 });
+  };
+
+  const reset = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const { x, y } = position;
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      animate={{ x, y }}
+      whileTap={{ scale: 0.97 }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className={className}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
 export default function NovaHero() {
   const prefersReducedMotion = useReducedMotion();
   const typed = useTypewriter(ROLES, { enabled: !prefersReducedMotion });
 
-  // Canvas constellation
   const canvasRef = useRef(null);
   const wrapperRef = useRef(null);
+  const textRef = useRef(null);
 
+  // Enhanced constellation with interactive particles
   useEffect(() => {
     if (prefersReducedMotion) return;
 
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
 
     let w, h, rafId;
@@ -69,7 +144,9 @@ export default function NovaHero() {
     const MOUSE_FORCE = 85;
 
     const resize = () => {
-      const rect = canvas.parentElement.getBoundingClientRect();
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const rect = parent.getBoundingClientRect();
       w = Math.floor(rect.width);
       h = Math.floor(rect.height);
       canvas.width = w * DPR;
@@ -82,20 +159,27 @@ export default function NovaHero() {
     const rand = (a, b) => Math.random() * (b - a) + a;
 
     const createParticles = () => {
-      particles = Array.from({ length: MAX_PARTICLES }, () => ({
-        x: rand(0, w),
-        y: rand(0, h),
-        vx: rand(-0.3, 0.3),
-        vy: rand(-0.3, 0.3),
-        r: rand(1.2, 2.4),
-      }));
+      particles = Array.from({ length: MAX_PARTICLES }, () => {
+        const r = rand(1.2, 2.8);
+        return {
+          x: rand(0, w),
+          y: rand(0, h),
+          vx: rand(-0.3, 0.3),
+          vy: rand(-0.3, 0.3),
+          r,
+          originalR: r,
+          pulsePhase: Math.random() * Math.PI * 2,
+        };
+      });
     };
 
-    const mouse = { x: -9999, y: -9999 };
+    const mouse = { x: -9999, y: -9999, active: false };
+
     const onMove = (e) => {
-      const r = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - r.left;
-      mouse.y = e.clientY - r.top;
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+      mouse.active = true;
 
       const host = wrapperRef.current;
       if (host) {
@@ -103,22 +187,38 @@ export default function NovaHero() {
         host.style.setProperty("--spot-y", `${mouse.y}px`);
       }
     };
+
     const onLeave = () => {
-      mouse.x = -9999;
-      mouse.y = -9999;
+      mouse.active = false;
     };
 
     const drawAurora = () => {
-      const g = ctx.createRadialGradient(w * 0.7, h * 0.3, 50, w * 0.5, h * 0.4, Math.max(w, h));
-      g.addColorStop(0, "rgba(76, 201, 240, 0.35)");
-      g.addColorStop(0.4, "rgba(72, 149, 239, 0.25)");
-      g.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = g;
+      const time = Date.now() * 0.0005;
+
+      const g1 = ctx.createRadialGradient(
+        w * 0.7 + Math.cos(time) * 20,
+        h * 0.3 + Math.sin(time) * 15,
+        50,
+        w * 0.5,
+        h * 0.4,
+        Math.max(w, h)
+      );
+      g1.addColorStop(0, "rgba(76, 201, 240, 0.4)");
+      g1.addColorStop(0.4, "rgba(72, 149, 239, 0.3)");
+      g1.addColorStop(1, "rgba(0, 0, 0, 0)");
+      ctx.fillStyle = g1;
       ctx.fillRect(0, 0, w, h);
 
-      const g2 = ctx.createRadialGradient(w * 0.3, h * 0.7, 30, w * 0.5, h * 0.6, Math.max(w, h));
-      g2.addColorStop(0, "rgba(100, 223, 223, 0.30)");
-      g2.addColorStop(0.5, "rgba(72, 191, 227, 0.18)");
+      const g2 = ctx.createRadialGradient(
+        w * 0.3 + Math.sin(time) * 25,
+        h * 0.7 + Math.cos(time * 0.7) * 20,
+        30,
+        w * 0.5,
+        h * 0.6,
+        Math.max(w, h)
+      );
+      g2.addColorStop(0, "rgba(100, 223, 223, 0.35)");
+      g2.addColorStop(0.5, "rgba(72, 191, 227, 0.22)");
       g2.addColorStop(1, "rgba(0, 0, 0, 0)");
       ctx.fillStyle = g2;
       ctx.fillRect(0, 0, w, h);
@@ -128,32 +228,60 @@ export default function NovaHero() {
       ctx.clearRect(0, 0, w, h);
       drawAurora();
 
-      // particles
+      const time = Date.now() * 0.002;
+
+      // Particles
       for (const p of particles) {
+        p.r = p.originalR * (1 + 0.3 * Math.sin(time + p.pulsePhase));
+
         const dx = p.x - mouse.x;
         const dy = p.y - mouse.y;
         const d2 = dx * dx + dy * dy;
+
         if (d2 < MOUSE_FORCE * MOUSE_FORCE) {
           const d = Math.sqrt(d2) || 1;
-          p.vx += (dx / d) * 0.25;
-          p.vy += (dy / d) * 0.25;
+          const force = mouse.active ? 0.4 : 0.1;
+          p.vx += (dx / d) * force;
+          p.vy += (dy / d) * force;
+          p.r = p.originalR * 1.8;
         }
+
+        p.vx *= 0.98;
+        p.vy *= 0.98;
         p.x += p.vx;
         p.y += p.vy;
 
-        if (p.x < -20) p.x = w + 20;
-        if (p.x > w + 20) p.x = -20;
-        if (p.y < -20) p.y = h + 20;
-        if (p.y > h + 20) p.y = -20;
+        if (p.x < -30) p.x = w + 30;
+        if (p.x > w + 30) p.x = -30;
+        if (p.y < -30) p.y = h + 30;
+        if (p.y > h + 30) p.y = -30;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+        ctx.fill();
+
+        const gradient = ctx.createRadialGradient(
+          p.x,
+          p.y,
+          0,
+          p.x,
+          p.y,
+          p.r * 3
+        );
+        gradient.addColorStop(
+          0,
+          `rgba(100, 223, 223, ${0.4 * (p.r / p.originalR)})`
+        );
+        gradient.addColorStop(1, "rgba(100, 223, 223, 0)");
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
         ctx.fill();
       }
 
-      // links
-      ctx.lineWidth = 1;
+      // Links
+      ctx.lineWidth = 1.5;
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
           const a = particles[i];
@@ -161,9 +289,20 @@ export default function NovaHero() {
           const dx = a.x - b.x;
           const dy = a.y - b.y;
           const dist = Math.hypot(dx, dy);
+
           if (dist < LINK_DIST) {
             const alpha = 1 - dist / LINK_DIST;
-            ctx.strokeStyle = `rgba(160, 220, 255, ${alpha * 0.45})`;
+            const gradient = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
+            gradient.addColorStop(
+              0,
+              `rgba(160, 220, 255, ${alpha * 0.6})`
+            );
+            gradient.addColorStop(
+              1,
+              `rgba(100, 223, 223, ${alpha * 0.4})`
+            );
+
+            ctx.strokeStyle = gradient;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
@@ -181,19 +320,30 @@ export default function NovaHero() {
       step();
     };
 
-    const ro = new ResizeObserver(() => {
+    const parent = canvas.parentElement;
+    const ro =
+      parent && "ResizeObserver" in window
+        ? new ResizeObserver(() => {
+            resize();
+            createParticles();
+          })
+        : null;
+
+    if (ro && parent) {
+      ro.observe(parent);
+    } else {
       resize();
       createParticles();
-    });
-    ro.observe(canvas.parentElement);
+    }
 
     canvas.addEventListener("pointermove", onMove);
     canvas.addEventListener("pointerleave", onLeave);
 
     init();
+
     return () => {
       cancelAnimationFrame(rafId);
-      ro.disconnect();
+      if (ro && parent) ro.disconnect();
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerleave", onLeave);
     };
@@ -209,59 +359,113 @@ export default function NovaHero() {
     >
       <div className="nova-inner">
         {/* TEXT */}
-        <div className="nova-text">
-          <p className="kicker">Hi, I’m</p>
+        <motion.div
+          className="nova-text"
+          ref={textRef}
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.p className="kicker" variants={itemVariants}>
+            Hi, I&apos;m
+          </motion.p>
 
-          <h1 className="name" aria-label="Haileyesus Mesfin">
-            <span className="stroke">Haileyesus</span>
-            <span className="stroke second">Mesfin</span>
-          </h1>
+          <motion.h1
+            className="name"
+            variants={itemVariants}
+            aria-label="Haileyesus"
+          >
+            <span className="stroke">Haileyesus.</span>
+           
+          </motion.h1>
 
-          <p className="role" role="status" aria-live="polite">
+          <motion.p
+            className="role"
+            variants={itemVariants}
+            role="status"
+            aria-live="polite"
+          >
             <span className="cursor">{typed}</span>
-          </p>
+          </motion.p>
 
-          <p className="blurb">
-            I build modern, fast, and accessible web applications with{" "}
+          <motion.p className="blurb" variants={itemVariants}>
+            I&apos;m a full-stack developer.  I build web apps using
             <strong>React</strong>, <strong>Next.js</strong>,{" "}
-            <strong>Node.js</strong>, and <strong>MongoDB</strong>. I focus on
-            clean code, performance, and real-world impact.
-          </p>
+            <strong>Node.js</strong>, and <strong>MongoDB</strong>.
+             I make sure my apps are easy to use, well-organized, and solve real problems.
+          </motion.p>
 
-          <div className="cta-row">
-            <a href="#projects" className="btn primary" aria-label="View my projects">
-              View Projects
-            </a>
-            <a href="#contact" className="btn ghost" aria-label="Contact me">
-              Contact Me
-            </a>
-          </div>
-        </div>
+          <motion.div className="cta-row" variants={itemVariants}>
+            <MagneticButton>
+              <a
+                href="#projects"
+                className="btn primary"
+                aria-label="View selected work"
+              >
+                <span className="btn-text">View My Work</span>
+                <div className="btn-shine" />
+              </a>
+            </MagneticButton>
+            <MagneticButton>
+              <a
+                href="#contact"
+                className="btn ghost"
+                aria-label="Contact me"
+              >
+                <span className="btn-text">Let&apos;s Work Together</span>
+              </a>
+            </MagneticButton>
+          </motion.div>
+        </motion.div>
 
-        {/* ANIMATED VISUAL WITH PHOTO */}
-        <div className="nova-canvas-wrap" aria-hidden="true">
+        {/* VISUAL */}
+        <motion.div
+          className="nova-canvas-wrap"
+          initial={{ scale: 0.9, opacity: 0, rotate: -3 }}
+          animate={{ scale: 1, opacity: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 50, delay: 0.5 }}
+          whileHover={{
+            scale: 1.02,
+            transition: { type: "spring", stiffness: 350, damping: 18 },
+          }}
+        >
           <canvas ref={canvasRef} className="nova-canvas" />
           <img
             src={myphoto}
-            alt="Haileyesus Mesfin — Full-Stack Developer"
+            alt="Haileyesus — Full-Stack Developer"
             className="nova-photo"
-            width="600"
-            height="600"
+            width="6000"
+            height="60000"
             loading="eager"
             decoding="async"
           />
           <div className="nova-overlay" />
           <div className="halo" />
-        </div>
+          <div className="floating-elements">
+            <div className="floating-element el-1">⚡</div>
+            <div className="floating-element el-2">🚀</div>
+            <div className="floating-element el-3">💻</div>
+      
+
+          </div>
+        </motion.div>
       </div>
 
       {/* Marquee */}
-      <div className="marquee" aria-hidden="true">
-        <div className="track">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <span key={i}>{MARQUEE_TEXT}</span>
-          ))}
+      <div className="marquee-wrapper" aria-hidden="true">
+        <div className="marquee">
+          <div className="track">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <span key={i}>{MARQUEE_TEXT}</span>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="scroll-indicator">
+        <span>Scroll to explore</span>
+        <div className="chevron" />
       </div>
     </header>
   );

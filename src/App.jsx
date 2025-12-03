@@ -1,24 +1,39 @@
- import React from 'react'
- import Navbar from "./components/Navbar";
+import React from "react";
+
+// COMPONENTS
+import Navbar from "./components/Navbar";
 import NovaHero from "./sections/NovaHero";
-import './App.css'
-import About from './sections/About';
-import Projects from './sections/Projects';
-import Skills from './sections/Skills';
-import Contact from './sections/Contact';
-import Footer from './components/Footer';
+import About from "./sections/About";
+import Services from "./sections/Services";
+import Skills from "./sections/Skills";
+import Projects from "./sections/Projects";
+import Testimonials from "./sections/Testimonials";
+import Process from "./sections/Process";
+import Journey from "./sections/Journey";
+import CallToAction from "./sections/CallToAction";
+import Contact from "./sections/Contact";
+import Footer from "./components/Footer";
+import BackToTop from "./components/BackToTop";
 
 function App() {
   return (
-    <div>
+    <>
       <Navbar />
-       <NovaHero />
- <About /> 
- <Projects/>
- <Skills/>
- <Contact/>
- <Footer/>
-    </div>
+      <NovaHero />
+
+      <About />
+      <Services />
+      <Skills />
+      <Projects />
+      <Testimonials />
+      <Process />
+      <Journey />
+      <CallToAction />
+      <Contact />
+      <BackToTop />
+      <Footer />
+    </>
   );
 }
-export default App
+
+export default App;

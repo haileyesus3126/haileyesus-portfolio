@@ -1,76 +1,262 @@
 .footer {
   position: relative;
-  background: #0f172a; /* dark base */
-  color: #cbd5e1;
-  padding: 28px 20px;
-  margin-top: 60px;
-  text-align: center;
+  margin-top: 80px;
+  padding: 40px 20px 24px;
+  border-top: 1px solid var(--line);
+  background: radial-gradient(
+      circle at top,
+      color-mix(in oklab, var(--accent) 10%, transparent),
+      transparent 60%
+    ),
+    color-mix(in oklab, var(--surface) 96%, transparent);
+  backdrop-filter: blur(24px) saturate(180%);
   overflow: hidden;
 }
 
-/* glowing top border */
-.footer::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
-  background-size: 200% 100%;
-  animation: glow-slide 6s linear infinite;
-}
-@keyframes glow-slide {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
 .footer-inner {
-  max-width: 1100px;
+  max-width: 1080px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  animation: fade-up .6s ease both;
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
+/* Glow background circle */
+.footer-glow {
+  position: absolute;
+  inset: auto;
+  left: 50%;
+  bottom: -120px;
+  width: 380px;
+  height: 380px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    circle at center,
+    color-mix(in oklab, var(--accent) 30%, transparent) 0%,
+    transparent 70%
+  );
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+/* Aurora style soft gradient */
+.footer-aurora {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      color-mix(in oklab, var(--accent) 14%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      circle at 90% 10%,
+      color-mix(in oklab, var(--accent-2) 18%, transparent),
+      transparent 65%
+    );
+  mix-blend-mode: screen;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Main text */
 .copy {
-  margin: 0;
-  font-size: .95rem;
-  color: #94a3b8;
+  margin: 0 0 18px;
+  font-size: 0.98rem;
+  color: color-mix(in oklab, var(--text) 90%, #ffffff20);
 }
 
+.copy strong {
+  font-weight: 700;
+  color: color-mix(in oklab, var(--accent) 80%, var(--text));
+}
+
+.heart {
+  display: inline-block;
+  transform-origin: center;
+  animation: heart-beat 1.6s ease-in-out infinite;
+}
+
+@keyframes heart-beat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.25);
+  }
+  45% {
+    transform: scale(1.05);
+  }
+}
+
+/* Social icons */
 .footer-socials {
   list-style: none;
-  display: flex;
-  gap: 18px;
   padding: 0;
+  margin: 0 0 20px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.footer-socials li {
+  display: inline-flex;
+}
+
+.social-link {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  color: var(--text);
+  text-decoration: none;
+  box-shadow: var(--shadow-1);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.social-link i {
+  font-size: 1.05rem;
+}
+
+.social-link::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    color-mix(in oklab, var(--accent) 18%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: -1;
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in oklab, var(--accent) 40%, var(--card-line));
+  color: var(--accent);
+  box-shadow: 0 10px 26px color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+.social-link:hover::before {
+  opacity: 1;
+}
+
+/* Bottom row */
+.footer-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: color-mix(in oklab, var(--text) 80%, #ffffff30);
+}
+
+.footer-year {
   margin: 0;
 }
 
-.footer-socials a {
-  color: #e2e8f0;
-  font-size: 1.3rem;
-  transition: transform .2s ease, color .2s ease, text-shadow .2s ease;
-}
-.footer-socials a:hover {
-  color: #38bdf8;
-  transform: translateY(-3px) scale(1.1);
-  text-shadow: 0 0 10px rgba(56, 189, 248, .8);
+/* Back to top button */
+.back-to-top {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--card-line);
+  background: var(--card);
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-1);
+  transition: all 0.25s ease;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-/* fade up animation */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+.back-to-top i {
+  font-size: 0.9rem;
 }
 
-/* responsive */
+.back-to-top::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--accent) 25%, transparent),
+    color-mix(in oklab, var(--accent-2) 25%, transparent)
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: -1;
+}
+
+.back-to-top:hover {
+  transform: translateY(-2px);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 10px 26px color-mix(in oklab, var(--accent) 30%, transparent);
+}
+
+.back-to-top:hover::before {
+  opacity: 1;
+}
+
+/* Tiny easter egg text */
+.easter-egg {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  opacity: 0.55;
+  color: color-mix(in oklab, var(--text) 65%, #ffffff40);
+}
+
+/* Screen-reader-only (in case navbar css isn't loaded first) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
+/* Responsive tweaks */
 @media (max-width: 600px) {
-  .footer-inner {
+  .footer {
+    padding: 32px 16px 20px;
+  }
+
+  .copy {
+    font-size: 0.9rem;
+  }
+
+  .footer-bottom {
     gap: 10px;
   }
-  .footer-socials a {
-    font-size: 1.2rem;
+}
+
+/* Reduced motion: disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .footer,
+  .footer * {
+    animation: none !important;
+    transition: none !important;
   }
 }

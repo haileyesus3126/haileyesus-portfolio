@@ -1,49 +1,147 @@
-/* Smooth scroll for anchor links */
+/* =========================================================
+   GLOBAL BEHAVIOR
+   ========================================================= */
+
+/* Smooth anchor scroll */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 90px; /* ensures sections never hide under navbar */
 }
 
-/* Basic page look */
+/* Base page styling */
 body {
   margin: 0;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: #e9e9e9;
-  background: #161616;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Sections share consistent padding and spacing */
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* =========================================================
+   SECTION STANDARDIZATION (Your main layout baseline)
+   ========================================================= */
 .section {
-  /* Room around content; leave space above for sticky navbar */
-  padding: 100px 20px;
-  min-height: 60vh;
-  max-width: 1000px;
-  margin: 0 auto;
-  text-align: center;
+  position: relative;
 
-  /* Make anchor jump land *below* the sticky navbar */
-  scroll-margin-top: 80px;
-  border: 1px solid rgba(255,255,255,.06);
-  border-radius: 12px;
-  background: #1f1f1f;
-  box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(80px, 12vw, 150px) 24px;
+
+  background:
+    radial-gradient(
+      200px 200px at 20% 20%,
+      color-mix(in oklab, var(--accent) 12%, transparent),
+      transparent 65%
+    ),
+    color-mix(in oklab, var(--surface) 98%, transparent);
+
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--card-line);
+  box-shadow:
+    var(--shadow-1),
+    0 0 0 1px rgba(255,255,255,0.03);
+
+  scroll-margin-top: 90px; /* works consistently w/ sticky navbar */
+  transition: background 0.3s ease;
 }
 
-/* Headings */
+/* Subtle glowing border for hoverable sections */
+.section:hover {
+  border-color: color-mix(in oklab, var(--accent) 25%, transparent);
+}
+
+/* =========================================================
+   HEADINGS
+   ========================================================= */
+
 .section h2 {
-  margin: 0 0 12px;
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  margin: 0 0 var(--space-3);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.5px;
+  color: var(--text);
+  text-align: center;
+  position: relative;
 }
 
-/* Paragraphs */
+.section h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 10px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 12px var(--accent);
+}
+
+/* =========================================================
+   PARAGRAPHS
+   ========================================================= */
+
 .section p {
-  margin: 0 auto;
-  color: #c9c9c9;
-  max-width: 60ch;
+  margin: 0.6rem auto 0;
+  max-width: 65ch;
+  line-height: 1.7;
+  font-size: var(--font-size-base);
+  color: var(--text-muted);
+  text-align: center;
 }
 
-/* small tweak for mobile */
-@media (max-width: 600px) {
+/* =========================================================
+   ANIMATED SECTION ENTRANCE (Awwwards feel)
+   ========================================================= */
+
+/* Fade + rise effect for every section (viewport aware) */
+.section {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: sectionReveal 1s cubic-bezier(.25, .85, .35, 1) forwards;
+}
+
+@keyframes sectionReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   RESPONSIVE OPTIMIZATION
+   ========================================================= */
+
+@media (max-width: 900px) {
   .section {
-    padding: 80px 14px;
+    padding: clamp(60px, 14vw, 110px) 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .section h2 {
+    font-size: 1.9rem;
+  }
+  .section p {
+    font-size: 0.95rem;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION ACCESSIBILITY
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .section {
+    opacity: 1;
+    transform: none;
   }
 }

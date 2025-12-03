@@ -1,23 +1,128 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- ═════════════════════ BASIC ═════════════════════ -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>ኃይለየሱስ — Portfolio</title>
-    <meta name="description" content="Full-stack developer portfolio" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+     
+    />
+   
+<title>𝐇𝐚𝐢𝐥𝐞𝐲𝐞𝐬𝐮𝐬 | MERN & Next.js Dev</title>
+
+    <meta
+      name="description"
+      content="Haileyesus — Full-Stack Developer specializing in React, Next.js, Node.js, and MongoDB. Building fast, beautiful, and scalable web applications with pixel-perfect design."
+    />
+
+    <!-- ═════════════════════ SEO & SOCIAL ═════════════════════ -->
+    <meta property="og:title" content="Haileyesus — Full-Stack Developer" />
+    <meta
+      property="og:description"
+      content="MERN & Next.js Developer | React, Node.js, MongoDB | Creator of high-performance web applications."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://haileyesus.dev" />
+    <meta property="og:image" content="https://haileyesus.dev/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Haileyesus — Full-Stack Developer" />
+    <meta
+      name="twitter:description"
+      content="Building the future of the web with React, Next.js, and modern animations."
+    />
+    <meta
+      name="twitter:image"
+      content="https://haileyesus.dev/og-image.jpg"
+    />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#0b132b" />
+    <meta name="msapplication-TileColor" content="#0b132b" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Icons (Font Awesome) -->
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      rel="preload"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      as="style"
+    />
+
+    <!-- Font Awesome (Async) -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      integrity="sha512-..."
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      />
+    </noscript>
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://haileyesus.dev" />
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- Author -->
+    <meta name="author" content="Haileyesus Mesfin" />
+
+    <!-- ═════════════════════ STRUCTURED DATA (JSON-LD) ═════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Haileyesus",
+      "alternateName": "Haileyesus3126",
+      "jobTitle": "Full-Stack Developer",
+      "description": "I am a passionate Full-Stack Developer from Ethiopia, specializing in React, Next.js, Node.js, and MongoDB. I build fast, beautiful, and accessible web applications with modern animations and clean code.",
+      "url": "https://haileyesus.dev",
+      "image": "https://haileyesus.dev/myphoto.jpg",
+      "sameAs": [
+        "https://github.com/haileyesus3126",
+        "https://linkedin.com/in/haileyesus3126",
+        "https://twitter.com/haileyesus3126"
+      ],
+      "knowsAbout": [
+        "React",
+        "Next.js",
+        "Node.js",
+        "MongoDB",
+        "TypeScript",
+        "Tailwind CSS",
+        "Framer Motion"
+      ],
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "University of Gondar"
+      }
+    }
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
+
+    <!-- React/Vite entry script -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
