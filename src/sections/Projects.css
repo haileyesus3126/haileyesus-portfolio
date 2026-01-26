@@ -1,300 +1,446 @@
-/* ===========================
-   PROJECTS SECTION (BRAND MATCHED TO CONTACT)
-   =========================== */
+/* ---------------------------------------
+   PROJECTS — PREMIUM + LIVE (AMAZING)
+   - Square grid background (different from hero/about)
+   - Slow drifting motion
+   - Aurora glow + soft noise
+   - Premium project cards w/ shine + border glow
+   - Full dark mode support
+---------------------------------------- */
 
+/* ✅ Theme tokens */
+:root {
+  --p-bg1: #ffffff;
+  --p-bg2: #f5f7fb;
+  --p-text: #0b1220;
+  --p-muted: rgba(11, 18, 32, 0.66);
+  --p-border: rgba(11, 18, 32, 0.10);
+
+  --eth-green: #0b6b3a;
+  --eth-gold: #f2c94c;
+  --eth-red: #d64545;
+
+  --p-card: rgba(255, 255, 255, 0.65);
+  --p-card2: rgba(255, 255, 255, 0.45);
+
+  --shadow: 0 18px 60px rgba(0, 0, 0, 0.10);
+  --shadow-2: 0 28px 90px rgba(0, 0, 0, 0.14);
+
+  --container: 1120px;
+
+  /* square grid */
+  --sq-line: rgba(11, 18, 32, 0.10);
+  --sq-line2: rgba(11, 18, 32, 0.06);
+  --sq-fill: rgba(242, 201, 76, 0.08);
+  --sq-glow: rgba(11, 107, 58, 0.08);
+}
+
+[data-theme="dark"],
+.dark,
+.theme-dark {
+  --p-bg1: #070a10;
+  --p-bg2: #0b1020;
+  --p-text: #eaf0ff;
+  --p-muted: rgba(234, 240, 255, 0.66);
+  --p-border: rgba(234, 240, 255, 0.10);
+
+  --p-card: rgba(255, 255, 255, 0.06);
+  --p-card2: rgba(255, 255, 255, 0.04);
+
+  --shadow: 0 22px 90px rgba(0, 0, 0, 0.55);
+  --shadow-2: 0 28px 120px rgba(0, 0, 0, 0.62);
+
+  --sq-line: rgba(234, 240, 255, 0.10);
+  --sq-line2: rgba(234, 240, 255, 0.06);
+  --sq-fill: rgba(242, 201, 76, 0.06);
+  --sq-glow: rgba(11, 107, 58, 0.06);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ---------------------------------------
+   SECTION
+---------------------------------------- */
 .projects {
   position: relative;
-  padding: clamp(80px, 11vw, 120px) 20px;
-  background:
-    radial-gradient(
-      circle at 0% 0%,
-      color-mix(in oklab, var(--accent) 22%, transparent),
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 100% 100%,
-      color-mix(in oklab, var(--accent-2) 18%, transparent),
-      transparent 65%
-    ),
-    color-mix(in oklab, var(--surface) 97%, transparent);
-  color: var(--text, #f4faff);
   overflow: hidden;
+  padding: clamp(80px, 10vh, 110px) clamp(16px, 4vw, 40px);
+  background: linear-gradient(180deg, var(--p-bg1), var(--p-bg2));
+  color: var(--p-text);
+  isolation: isolate;
 }
 
-/* Aurora glow (same as contact) */
+/* ✅ Square background (different style than hero/about) */
+.projects::before {
+  content: "";
+  position: absolute;
+  inset: -15%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.22;
+
+  background-image:
+    /* small crisp grid */
+    linear-gradient(var(--sq-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sq-line) 1px, transparent 1px),
+
+    /* larger grid (softer) */
+    linear-gradient(var(--sq-line2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sq-line2) 1px, transparent 1px),
+
+    /* “square cells” accent glows */
+    radial-gradient(circle at 20% 30%, var(--sq-fill) 0%, transparent 42%),
+    radial-gradient(circle at 80% 70%, var(--sq-glow) 0%, transparent 45%),
+    radial-gradient(circle at 55% 20%, rgba(214, 69, 69, 0.06) 0%, transparent 45%);
+
+  background-size:
+    22px 22px,
+    22px 22px,
+    64px 64px,
+    64px 64px,
+    auto,
+    auto,
+    auto;
+
+  background-position:
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0,
+    0 0;
+
+  animation: projectsGridDrift 30s linear infinite;
+  transform: translateZ(0);
+}
+
+@keyframes projectsGridDrift {
+  0%   { transform: translate3d(0, 0, 0); }
+  50%  { transform: translate3d(-26px, -18px, 0); }
+  100% { transform: translate3d(-52px, -36px, 0); }
+}
+
+/* ✅ Aurora glow layer (you already have a div) */
 .projects-aurora {
   position: absolute;
-  inset: 0;
+  inset: -30%;
+  z-index: 1;
   pointer-events: none;
-  background:
-    radial-gradient(
-      circle at 0% 0%,
-      color-mix(in oklab, var(--accent) 22%, transparent),
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 100% 100%,
-      color-mix(in oklab, var(--accent-2) 18%, transparent),
-      transparent 60%
-    );
+  filter: blur(48px);
   opacity: 0.45;
-  mix-blend-mode: screen;
-  z-index: 0;
+
+  background:
+    radial-gradient(circle at 18% 30%, rgba(242, 201, 76, 0.18) 0%, transparent 55%),
+    radial-gradient(circle at 75% 25%, rgba(11, 107, 58, 0.16) 0%, transparent 58%),
+    radial-gradient(circle at 70% 80%, rgba(214, 69, 69, 0.14) 0%, transparent 62%);
+
+  animation: auroraFloat 10s ease-in-out infinite alternate;
+  transform: translateZ(0);
 }
 
+@keyframes auroraFloat {
+  0%   { transform: translate3d(-14px, -10px, 0) scale(1.03); }
+  50%  { transform: translate3d(16px, 12px, 0) scale(1.08); }
+  100% { transform: translate3d(-10px, 18px, 0) scale(1.03); }
+}
+
+/* ✅ Subtle noise (premium film grain) */
+.projects::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+}
+
+/* ---------------------------------------
+   INNER + HEADER
+---------------------------------------- */
 .projects-inner {
   position: relative;
-  max-width: 1120px;
+  z-index: 3;
+  max-width: var(--container);
   margin: 0 auto;
-  z-index: 1;
 }
-
-/* ===========================
-   HEADER
-   =========================== */
 
 .eyebrow {
-  margin: 0 0 8px;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  color: #84d2ff;
-  opacity: 0.9;
-}
+  margin: 0 0 10px 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.22px;
+  font-size: 13px;
+  color: var(--p-muted);
 
-.projects-title {
-  margin: 0 0 10px;
-  font-size: clamp(2rem, 3.4vw, 2.6rem);
-  font-weight: 700;
-  color: var(--text, #f4faff);
-}
-
-.grad {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.projects-lead {
-  margin: 0;
-  max-width: 520px;
-  font-size: 1rem;
-  line-height: 1.7;
-  color: color-mix(in oklab, var(--text) 80%, #c3d8f7);
-}
-
-.projects-divider {
-  position: relative;
-  margin-top: 20px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
 }
 
-.projects-divider .line {
-  flex: 1;
-  height: 1px;
-  background: color-mix(in oklab, var(--text) 40%, transparent);
-}
-
-.projects-divider .glow {
-  width: 70px;
-  height: 6px;
+.eyebrow::before {
+  content: "";
+  width: 18px;
+  height: 2px;
   border-radius: 999px;
-  background: radial-gradient(circle, var(--accent), transparent 70%);
-}
-
-/* ===========================
-   GRID
-   =========================== */
-
-.projects-grid {
-  margin-top: 32px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-}
-
-/* ===========================
-   CARD (BRAND MATCHED)
-   =========================== */
-
-.project-card {
-  position: relative;
-  border-radius: 22px;
-  background: color-mix(in oklab, var(--surface) 97%, transparent);
-  border: 1px solid color-mix(in oklab, var(--accent) 18%, var(--card-line));
-  box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.45),
-    0 0 0 1px rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(22px) saturate(160%);
-  overflow: hidden;
-}
-
-/* CARD BORDER GLOW (same as contact form) */
-.project-card .card-border {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--accent) 55%, transparent),
-    transparent 35%,
-    color-mix(in oklab, var(--accent-2) 50%, transparent)
-  );
-  opacity: 0;
-  mix-blend-mode: screen;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.project-card:hover .card-border {
+  background: linear-gradient(90deg, var(--eth-green), var(--eth-gold), var(--eth-red));
   opacity: 0.9;
 }
 
-/* Thumbnail */
+.projects-title {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 950;
+  letter-spacing: -0.8px;
+  font-size: clamp(34px, 4.8vw, 56px);
+}
+
+.projects-lead {
+  margin: 12px 0 18px 0;
+  max-width: 68ch;
+  color: var(--p-muted);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.projects-divider {
+  position: relative;
+  height: 20px;
+  margin: 12px 0 34px 0;
+}
+
+.projects-divider .line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 9px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--p-border), transparent);
+}
+
+.projects-divider .glow {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  top: 5px;
+  height: 10px;
+  filter: blur(10px);
+  opacity: 0.55;
+  background: linear-gradient(90deg, transparent, rgba(242, 201, 76, 0.35), rgba(11, 107, 58, 0.30), rgba(214, 69, 69, 0.25), transparent);
+}
+
+/* ---------------------------------------
+   GRID
+---------------------------------------- */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(14px, 2vw, 18px);
+}
+
+/* ---------------------------------------
+   CARD
+---------------------------------------- */
+.project-card {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid var(--p-border);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--p-card) 92%, transparent),
+    color-mix(in srgb, var(--p-card2) 92%, transparent)
+  );
+  box-shadow: none;
+  transform: translateZ(0);
+  transition: box-shadow 240ms ease, border-color 240ms ease;
+}
+
+.project-card:hover {
+  box-shadow: var(--shadow);
+  border-color: color-mix(in srgb, var(--eth-gold) 22%, var(--p-border));
+}
+
+/* Premium border glow line */
+.card-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--p-bg1), var(--p-bg1)) padding-box,
+    linear-gradient(90deg, rgba(11,107,58,0.45), rgba(242,201,76,0.45), rgba(214,69,69,0.40)) border-box;
+  border: 1px solid transparent;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.project-card:hover .card-border {
+  opacity: 0.50;
+}
+
+/* ---------------------------------------
+   THUMB
+---------------------------------------- */
 .project-thumb {
   position: relative;
+  height: 190px;
   overflow: hidden;
-  border-radius: 20px 20px 12px 12px;
+  background: rgba(0,0,0,0.02);
 }
 
 .project-thumb img {
   width: 100%;
-  height: 180px;
+  height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  display: block;
+  transform: scale(1.02);
+  transition: transform 420ms ease, filter 420ms ease;
+  filter: saturate(1.02) contrast(1.03);
 }
 
 .project-card:hover .project-thumb img {
   transform: scale(1.06);
+  filter: saturate(1.06) contrast(1.06);
 }
 
-/* Badge */
-.badge {
+/* Shine sweep on hover */
+.project-thumb .shine {
   position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 4px 10px;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--surface) 92%, transparent);
-  color: color-mix(in oklab, var(--text) 70%, #d3e6ff);
-  border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--card-line));
-  display: none;
-}
-
-/* Shine sweep */
-.shine {
-  position: absolute;
-  inset: 0;
+  inset: -2px;
+  pointer-events: none;
+  opacity: 0;
   background: linear-gradient(
     120deg,
-    transparent,
-    rgba(255, 255, 255, 0.45),
-    transparent
+    transparent 0%,
+    rgba(255,255,255,0.35) 35%,
+    transparent 70%
   );
   transform: translateX(-120%);
-  transition: transform 0.65s ease;
+  transition: opacity 240ms ease, transform 600ms ease;
 }
 
-.project-card:hover .shine {
+.project-card:hover .project-thumb .shine {
+  opacity: 1;
   transform: translateX(120%);
 }
 
-/* Body */
+/* ---------------------------------------
+   BODY
+---------------------------------------- */
 .project-body {
-  padding: 18px 16px 12px;
+  padding: 16px 16px 14px 16px;
 }
 
 .project-name {
-  margin: 0 0 6px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text, #f4faff);
+  margin: 0 0 8px 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight: 950;
+  font-size: 16px;
+  letter-spacing: -0.2px;
+  color: var(--p-text);
 }
 
 .project-desc {
-  margin: 0 0 12px;
-  font-size: 0.92rem;
-  color: color-mix(in oklab, var(--text) 80%, #c3d8f7);
+  margin: 0;
+  color: var(--p-muted);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.75;
+  max-width: 60ch;
 }
 
-/* Tech pills */
-.project-tech {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.pill {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  background: color-mix(in oklab, var(--surface) 95%, transparent);
-  border: 1px solid color-mix(in oklab, var(--accent) 22%, var(--card-line));
-  color: color-mix(in oklab, var(--text) 78%, #d3e6ff);
-}
-
-/* Buttons */
+/* ---------------------------------------
+   ACTIONS
+---------------------------------------- */
 .project-actions {
   display: flex;
   gap: 10px;
-  padding: 12px 16px 18px;
+  padding: 0 16px 16px 16px;
 }
 
-.projects .btn {
+/* Local buttons (safe even if you already have .btn globally) */
+.project-actions .btn {
   flex: 1;
-  padding: 8px 12px;
-  font-weight: 600;
   border-radius: 999px;
-  cursor: pointer;
-  border: 1px solid color-mix(in oklab, var(--accent) 20%, var(--card-line));
-  transition: transform 0.2s ease, background 0.2s ease;
+  padding: 10px 12px;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+  border: 1px solid var(--p-border);
+  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease, border-color 220ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Primary button */
-.projects .btn.primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: white;
+.project-actions .btn.primary {
+  color: var(--p-text);
+  border-color: color-mix(in srgb, var(--eth-green) 30%, var(--p-border));
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--eth-green) 18%, var(--p-bg1)),
+    color-mix(in srgb, var(--eth-gold) 14%, var(--p-bg1))
+  );
 }
 
-.projects .btn.primary:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+.project-actions .btn.ghost {
+  color: var(--p-text);
+  background: color-mix(in srgb, var(--p-bg1) 70%, transparent);
 }
 
-/* Ghost button */
-.projects .btn.ghost {
-  background: color-mix(in oklab, var(--surface) 95%, transparent);
-  color: var(--text, #f4faff);
+.project-actions .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
 }
 
-.projects .btn.ghost:hover {
-  transform: translateY(-2px);
-  background: color-mix(in oklab, var(--accent) 16%, transparent);
+.project-actions .btn.primary:hover {
+  border-color: color-mix(in srgb, var(--eth-green) 45%, var(--p-border));
 }
 
-/* ===========================
+.project-actions .btn.ghost:hover {
+  border-color: color-mix(in srgb, var(--eth-gold) 30%, var(--p-border));
+  background: color-mix(in srgb, var(--p-bg1) 82%, transparent);
+}
+
+.project-actions .btn.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Focus */
+.project-actions .btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--eth-gold) 60%, transparent);
+  outline-offset: 3px;
+}
+
+/* ---------------------------------------
    RESPONSIVE
-   =========================== */
-
-@media (max-width: 1024px) {
+---------------------------------------- */
+@media (max-width: 980px) {
   .projects-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 720px) {
+@media (max-width: 620px) {
   .projects-grid {
     grid-template-columns: 1fr;
   }
 
-  .project-thumb img {
+  .project-thumb {
     height: 200px;
   }
 }

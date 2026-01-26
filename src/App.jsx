@@ -15,6 +15,7 @@ import Contact from "./sections/Contact";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 
+
 function App() {
   return (
     <>
@@ -22,13 +23,12 @@ function App() {
       <NovaHero />
 
       <About />
-      <Services />
-      <Skills />
+      
+      
       <Projects />
-      <Testimonials />
-      <Process />
-      <Journey />
-      <CallToAction />
+      
+      
+       
       <Contact />
       <BackToTop />
       <Footer />

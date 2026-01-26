@@ -1,470 +1,309 @@
-import { useEffect, useRef, useState } from "react";
-import { useReducedMotion, motion } from "framer-motion";
+import { useEffect, useMemo, useRef } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useScroll,
+  useReducedMotion,
+} from "framer-motion";
 import "./NovaHero.css";
-import myphoto from "../assets/myphoto.jpg";
-
-const ROLES = [
-  "Full-Stack JavaScript Developer",
-  "React & Next.js Developer",
-  "Problem Solver & Builder",
-];
-
-const MARQUEE_TEXT =
-  "HTML • CSS • JavaScript • React • Next.js • Node • Express • MongoDB • REST APIs • Vercel •";
-
-// Framer Motion variants (defined outside for performance)
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.3,
-      staggerChildren: 0.12,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 80, damping: 14 },
-  },
-};
-
-// Enhanced typewriter with optional reduced motion
-function useTypewriter(
-  words,
-  { pause = 1200, typingSpeed = 60, deletingSpeed = 35, enabled = true } = {}
-) {
-  const [i, setI] = useState(0);
-  const [txt, setTxt] = useState("");
-  const [del, setDel] = useState(false);
-
-  useEffect(() => {
-    if (!words || words.length === 0) return;
-
-    if (!enabled) {
-      setTxt(words[i]);
-      return;
-    }
-
-    let t;
-    const full = words[i];
-    const speed = del ? deletingSpeed : typingSpeed;
-
-    const step = () => {
-      if (!del) {
-        const next = full.slice(0, txt.length + 1);
-        setTxt(next);
-        if (next === full) {
-          t = setTimeout(() => setDel(true), pause);
-        } else {
-          t = setTimeout(step, speed);
-        }
-      } else {
-        const next = full.slice(0, txt.length - 1);
-        setTxt(next);
-        if (!next.length) {
-          setDel(false);
-          setI((v) => (v + 1) % words.length);
-        } else {
-          t = setTimeout(step, speed);
-        }
-      }
-    };
-
-    t = setTimeout(step, speed);
-    return () => clearTimeout(t);
-  }, [txt, del, i, words, pause, typingSpeed, deletingSpeed, enabled]);
-
-  return txt;
-}
-
-// Magnetic button component
-const MagneticButton = ({ children, className, ...props }) => {
-  const ref = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouse = (e) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * 0.08, y: middleY * 0.08 });
-  };
-
-  const reset = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
-  const { x, y } = position;
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouse}
-      onMouseLeave={reset}
-      animate={{ x, y }}
-      whileTap={{ scale: 0.97 }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
-      className={className}
-      {...props}
-    >
-      {children}
-    </motion.div>
-  );
-};
 
 export default function NovaHero() {
   const prefersReducedMotion = useReducedMotion();
-  const typed = useTypewriter(ROLES, { enabled: !prefersReducedMotion });
 
-  const canvasRef = useRef(null);
-  const wrapperRef = useRef(null);
-  const textRef = useRef(null);
+  // --- Mouse-driven parallax / 3D tilt ---
+  const visualRef = useRef(null);
 
-  // Enhanced constellation with interactive particles
-  useEffect(() => {
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+
+  const mxSpring = useSpring(mx, { stiffness: 120, damping: 18, mass: 0.2 });
+  const mySpring = useSpring(my, { stiffness: 120, damping: 18, mass: 0.2 });
+
+  // tilt range
+  const rotateY = useTransform(mxSpring, [-0.5, 0.5], [-12, 12]);
+  const rotateX = useTransform(mySpring, [-0.5, 0.5], [10, -10]);
+
+  // inner parallax offsets
+  const innerX = useTransform(mxSpring, [-0.5, 0.5], [-14, 14]);
+  const innerY = useTransform(mySpring, [-0.5, 0.5], [-10, 10]);
+
+  // glow follow
+  const glowX = useTransform(mxSpring, [-0.5, 0.5], ["25%", "75%"]);
+  const glowY = useTransform(mySpring, [-0.5, 0.5], ["30%", "70%"]);
+
+  const onMouseMove = (e) => {
     if (prefersReducedMotion) return;
+    if (!visualRef.current) return;
 
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const r = visualRef.current.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;   // 0..1
+    const py = (e.clientY - r.top) / r.height;  // 0..1
 
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    // normalize to -0.5..0.5
+    mx.set(px - 0.5);
+    my.set(py - 0.5);
+  };
 
-    let w, h, rafId;
-    let particles = [];
-    const MAX_PARTICLES = 90;
-    const LINK_DIST = 140;
-    const MOUSE_FORCE = 85;
+  const onMouseLeave = () => {
+    mx.set(0);
+    my.set(0);
+  };
 
-    const resize = () => {
-      const parent = canvas.parentElement;
-      if (!parent) return;
-      const rect = parent.getBoundingClientRect();
-      w = Math.floor(rect.width);
-      h = Math.floor(rect.height);
-      canvas.width = w * DPR;
-      canvas.height = h * DPR;
-      canvas.style.width = `${w}px`;
-      canvas.style.height = `${h}px`;
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    };
+  // --- Scroll-driven motion (reveal / depth) ---
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
 
-    const rand = (a, b) => Math.random() * (b - a) + a;
+  const textY = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -28]);
+  const textOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-    const createParticles = () => {
-      particles = Array.from({ length: MAX_PARTICLES }, () => {
-        const r = rand(1.2, 2.8);
-        return {
-          x: rand(0, w),
-          y: rand(0, h),
-          vx: rand(-0.3, 0.3),
-          vy: rand(-0.3, 0.3),
-          r,
-          originalR: r,
-          pulsePhase: Math.random() * Math.PI * 2,
-        };
-      });
-    };
+  const visualY = useTransform(scrollYProgress, [0, 1], [0, prefersReducedMotion ? 0 : -42]);
+  const visualScale = useTransform(scrollYProgress, [0, 1], [1, prefersReducedMotion ? 1 : 0.98]);
 
-    const mouse = { x: -9999, y: -9999, active: false };
+  const enter = useMemo(
+    () => ({
+      hidden: { opacity: 0, y: 16, filter: "blur(10px)" },
+      show: (d = 0) => ({
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        transition: prefersReducedMotion
+          ? { duration: 0 }
+          : { duration: 0.7, ease: [0.2, 0.8, 0.2, 1], delay: d },
+      }),
+    }),
+    [prefersReducedMotion]
+  );
 
-    const onMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-      mouse.active = true;
-
-      const host = wrapperRef.current;
-      if (host) {
-        host.style.setProperty("--spot-x", `${mouse.x}px`);
-        host.style.setProperty("--spot-y", `${mouse.y}px`);
-      }
-    };
-
-    const onLeave = () => {
-      mouse.active = false;
-    };
-
-    const drawAurora = () => {
-      const time = Date.now() * 0.0005;
-
-      const g1 = ctx.createRadialGradient(
-        w * 0.7 + Math.cos(time) * 20,
-        h * 0.3 + Math.sin(time) * 15,
-        50,
-        w * 0.5,
-        h * 0.4,
-        Math.max(w, h)
-      );
-      g1.addColorStop(0, "rgba(76, 201, 240, 0.4)");
-      g1.addColorStop(0.4, "rgba(72, 149, 239, 0.3)");
-      g1.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = g1;
-      ctx.fillRect(0, 0, w, h);
-
-      const g2 = ctx.createRadialGradient(
-        w * 0.3 + Math.sin(time) * 25,
-        h * 0.7 + Math.cos(time * 0.7) * 20,
-        30,
-        w * 0.5,
-        h * 0.6,
-        Math.max(w, h)
-      );
-      g2.addColorStop(0, "rgba(100, 223, 223, 0.35)");
-      g2.addColorStop(0.5, "rgba(72, 191, 227, 0.22)");
-      g2.addColorStop(1, "rgba(0, 0, 0, 0)");
-      ctx.fillStyle = g2;
-      ctx.fillRect(0, 0, w, h);
-    };
-
-    const step = () => {
-      ctx.clearRect(0, 0, w, h);
-      drawAurora();
-
-      const time = Date.now() * 0.002;
-
-      // Particles
-      for (const p of particles) {
-        p.r = p.originalR * (1 + 0.3 * Math.sin(time + p.pulsePhase));
-
-        const dx = p.x - mouse.x;
-        const dy = p.y - mouse.y;
-        const d2 = dx * dx + dy * dy;
-
-        if (d2 < MOUSE_FORCE * MOUSE_FORCE) {
-          const d = Math.sqrt(d2) || 1;
-          const force = mouse.active ? 0.4 : 0.1;
-          p.vx += (dx / d) * force;
-          p.vy += (dy / d) * force;
-          p.r = p.originalR * 1.8;
-        }
-
-        p.vx *= 0.98;
-        p.vy *= 0.98;
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < -30) p.x = w + 30;
-        if (p.x > w + 30) p.x = -30;
-        if (p.y < -30) p.y = h + 30;
-        if (p.y > h + 30) p.y = -30;
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
-        ctx.fill();
-
-        const gradient = ctx.createRadialGradient(
-          p.x,
-          p.y,
-          0,
-          p.x,
-          p.y,
-          p.r * 3
-        );
-        gradient.addColorStop(
-          0,
-          `rgba(100, 223, 223, ${0.4 * (p.r / p.originalR)})`
-        );
-        gradient.addColorStop(1, "rgba(100, 223, 223, 0)");
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
-        ctx.fill();
-      }
-
-      // Links
-      ctx.lineWidth = 1.5;
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const a = particles[i];
-          const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const dist = Math.hypot(dx, dy);
-
-          if (dist < LINK_DIST) {
-            const alpha = 1 - dist / LINK_DIST;
-            const gradient = ctx.createLinearGradient(a.x, a.y, b.x, b.y);
-            gradient.addColorStop(
-              0,
-              `rgba(160, 220, 255, ${alpha * 0.6})`
-            );
-            gradient.addColorStop(
-              1,
-              `rgba(100, 223, 223, ${alpha * 0.4})`
-            );
-
-            ctx.strokeStyle = gradient;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-          }
-        }
-      }
-
-      rafId = requestAnimationFrame(step);
-    };
-
-    const init = () => {
-      resize();
-      createParticles();
-      step();
-    };
-
-    const parent = canvas.parentElement;
-    const ro =
-      parent && "ResizeObserver" in window
-        ? new ResizeObserver(() => {
-            resize();
-            createParticles();
-          })
-        : null;
-
-    if (ro && parent) {
-      ro.observe(parent);
-    } else {
-      resize();
-      createParticles();
-    }
-
-    canvas.addEventListener("pointermove", onMove);
-    canvas.addEventListener("pointerleave", onLeave);
-
-    init();
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      if (ro && parent) ro.disconnect();
-      canvas.removeEventListener("pointermove", onMove);
-      canvas.removeEventListener("pointerleave", onLeave);
-    };
-  }, [prefersReducedMotion]);
+  // Optional: respect reduced motion by resetting transforms
+  useEffect(() => {
+    if (!prefersReducedMotion) return;
+    mx.set(0);
+    my.set(0);
+  }, [prefersReducedMotion, mx, my]);
 
   return (
     <header
+      ref={heroRef}
       id="home"
       className="nova-hero"
-      ref={wrapperRef}
       aria-label="Portfolio hero section"
-      data-reduced={prefersReducedMotion ? "true" : "false"}
     >
       <div className="nova-inner">
         {/* TEXT */}
-        <motion.div
-          className="nova-text"
-          ref={textRef}
-          initial="hidden"
-          animate="visible"
-          variants={containerVariants}
-        >
-          <motion.p className="kicker" variants={itemVariants}>
-            Hi, I&apos;m
+        <motion.div className="nova-text" style={{ y: textY, opacity: textOpacity }}>
+          <motion.p className="kicker" variants={enter} initial="hidden" animate="show" custom={0.05}>
+            Selam, I&apos;m
           </motion.p>
 
-          <motion.h1
-            className="name"
-            variants={itemVariants}
-            aria-label="Haileyesus"
-          >
+          <motion.h1 className="name" aria-label="Haileyesus" variants={enter} initial="hidden" animate="show" custom={0.12}>
             <span className="stroke">Haileyesus.</span>
-           
           </motion.h1>
 
-          <motion.p
-            className="role"
-            variants={itemVariants}
-            role="status"
-            aria-live="polite"
-          >
-            <span className="cursor">{typed}</span>
+          <motion.p className="role" variants={enter} initial="hidden" animate="show" custom={0.20}>
+            But you can call me Haile
           </motion.p>
 
-          <motion.p className="blurb" variants={itemVariants}>
-            I&apos;m a full-stack developer.  I build web apps using
-            <strong>React</strong>, <strong>Next.js</strong>,{" "}
-            <strong>Node.js</strong>, and <strong>MongoDB</strong>.
-             I make sure my apps are easy to use, well-organized, and solve real problems.
+          <motion.p className="blurb" variants={enter} initial="hidden" animate="show" custom={0.28}>
+            I make websites. I build them to look nice, work fast, and be easy for people to use. I like making things simple, clean, and fun for everyone.
           </motion.p>
 
-          <motion.div className="cta-row" variants={itemVariants}>
-            <MagneticButton>
-              <a
-                href="#projects"
-                className="btn primary"
-                aria-label="View selected work"
-              >
-                <span className="btn-text">View My Work</span>
-                <div className="btn-shine" />
-              </a>
-            </MagneticButton>
-            <MagneticButton>
-              <a
-                href="#contact"
-                className="btn ghost"
-                aria-label="Contact me"
-              >
-                <span className="btn-text">Let&apos;s Work Together</span>
-              </a>
-            </MagneticButton>
+          <motion.div className="cta-row" variants={enter} initial="hidden" animate="show" custom={0.36}>
+            <a href="#projects" className="btn primary" aria-label="View selected work">
+              <span className="btn-text">View My Work</span>
+              <span className="btn-shine" aria-hidden="true" />
+            </a>
+
+            <a href="#contact" className="btn ghost" aria-label="Contact me">
+              <span className="btn-text">Let&apos;s Work Together</span>
+            </a>
+          </motion.div>
+
+          <motion.div className="mini-proof" aria-label="Quick highlights" variants={enter} initial="hidden" animate="show" custom={0.44}>
+            <div className="proof-item">
+              <span className="proof-dot green" aria-hidden="true" />
+            </div>
+            <div className="proof-item">
+              <span className="proof-dot gold" aria-hidden="true" />
+            </div>
+            <div className="proof-item">
+              <span className="proof-dot red" aria-hidden="true" />
+            </div>
           </motion.div>
         </motion.div>
 
-        {/* VISUAL */}
+        {/* VISUAL (LIVE) */}
         <motion.div
-          className="nova-canvas-wrap"
-          initial={{ scale: 0.9, opacity: 0, rotate: -3 }}
-          animate={{ scale: 1, opacity: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 50, delay: 0.5 }}
-          whileHover={{
-            scale: 1.02,
-            transition: { type: "spring", stiffness: 350, damping: 18 },
+          className="nova-visual"
+          ref={visualRef}
+          aria-hidden="true"
+          onMouseMove={onMouseMove}
+          onMouseLeave={onMouseLeave}
+          style={{
+            y: visualY,
+            scale: visualScale,
           }}
         >
-          <canvas ref={canvasRef} className="nova-canvas" />
-          <img
-            src={myphoto}
-            alt="Haileyesus — Full-Stack Developer"
-            className="nova-photo"
-            width="6000"
-            height="60000"
-            loading="eager"
-            decoding="async"
+          {/* mouse-follow glow */}
+          <motion.div
+            className="visual-live-glow"
+            style={{
+              left: glowX,
+              top: glowY,
+            }}
+            aria-hidden="true"
           />
-          <div className="nova-overlay" />
-          <div className="halo" />
-          <div className="floating-elements">
-            <div className="floating-element el-1">⚡</div>
-            <div className="floating-element el-2">🚀</div>
-            <div className="floating-element el-3">💻</div>
-      
 
-          </div>
+          <div className="visual-bg-glow" />
+          <div className="visual-tibeb" />
+
+          {/* 3D tilt wrapper */}
+          <motion.div
+            className="visual-tilt"
+            style={
+              prefersReducedMotion
+                ? undefined
+                : {
+                    rotateX,
+                    rotateY,
+                  }
+            }
+          >
+            {/* floating layer */}
+            <motion.div
+              className="visual-float"
+              animate={
+                prefersReducedMotion
+                  ? undefined
+                  : { y: [0, -8, 0], rotateZ: [0, 0.6, 0] }
+              }
+              transition={
+                prefersReducedMotion
+                  ? undefined
+                  : { duration: 4.6, repeat: Infinity, ease: "easeInOut" }
+              }
+            >
+              {/* inner parallax for depth */}
+              <motion.div
+                className="visual-depth"
+                style={
+                  prefersReducedMotion
+                    ? undefined
+                    : {
+                        x: innerX,
+                        y: innerY,
+                      }
+                }
+              >
+                {/* SVG Illustration */}
+                <div className="illustration">
+                  <svg
+                    viewBox="0 0 820 820"
+                    width="100%"
+                    height="100%"
+                    role="img"
+                    aria-label="Developer standing and coding with passion"
+                  >
+                    <defs>
+                      {/* ✅ If you already updated these to your resume colors earlier, keep them.
+                          If not, you can update later in your SVG. */}
+                      <radialGradient id="g1" cx="50%" cy="35%" r="70%">
+                        <stop offset="0%" stopColor="rgba(242,201,76,0.22)" />
+                        <stop offset="50%" stopColor="rgba(11,107,58,0.10)" />
+                        <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+                      </radialGradient>
+                      <radialGradient id="g2" cx="60%" cy="70%" r="75%">
+                        <stop offset="0%" stopColor="rgba(214,69,69,0.16)" />
+                        <stop offset="60%" stopColor="rgba(107,74,43,0.10)" />
+                        <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+                      </radialGradient>
+                      <linearGradient id="screenGlow" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="rgba(14, 146, 151, 0.35)" />
+                        <stop offset="50%" stopColor="rgba(76, 195, 242, 0.3)" />
+                        <stop offset="100%" stopColor="rgba(214,69,69,0.25)" />
+                      </linearGradient>
+                      <linearGradient id="desk" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stopColor="rgba(11,18,32,0.08)" />
+                        <stop offset="100%" stopColor="rgba(11,18,32,0.03)" />
+                      </linearGradient>
+                    </defs>
+
+                    <circle cx="420" cy="320" r="330" fill="url(#g1)" />
+                    <circle cx="420" cy="520" r="320" fill="url(#g2)" />
+
+                    <rect x="120" y="600" width="580" height="18" rx="9" fill="url(#desk)" />
+                    <rect x="160" y="618" width="500" height="16" rx="8" fill="rgba(11,18,32,0.05)" />
+
+                    <rect x="370" y="250" width="300" height="210" rx="18" fill="rgba(255,255,255,0.55)" stroke="rgba(11,18,32,0.10)" />
+                    <rect x="388" y="268" width="264" height="160" rx="14" fill="rgba(7,10,16,0.75)" />
+                    <rect x="388" y="268" width="264" height="160" rx="14" fill="url(#screenGlow)" opacity="0.7" />
+                    <rect x="500" y="462" width="40" height="48" rx="10" fill="rgba(11,18,32,0.08)" />
+                    <rect x="460" y="508" width="120" height="14" rx="7" fill="rgba(11,18,32,0.07)" />
+
+                    <g opacity="0.95">
+                      <rect x="406" y="292" width="140" height="10" rx="5" fill="rgba(255,255,255,0.70)" />
+                      <rect x="406" y="314" width="200" height="10" rx="5" fill="rgba(255,255,255,0.55)" />
+                      <rect x="406" y="336" width="170" height="10" rx="5" fill="rgba(255,255,255,0.62)" />
+                      <rect x="406" y="358" width="220" height="10" rx="5" fill="rgba(255,255,255,0.48)" />
+                      <rect x="406" y="380" width="150" height="10" rx="5" fill="rgba(255,255,255,0.60)" />
+                    </g>
+
+                    <rect x="170" y="470" width="250" height="145" rx="18" fill="rgba(255,255,255,0.55)" stroke="rgba(11,18,32,0.10)" />
+                    <rect x="190" y="490" width="210" height="92" rx="14" fill="rgba(7,10,16,0.70)" />
+                    <rect x="190" y="490" width="210" height="92" rx="14" fill="url(#screenGlow)" opacity="0.55" />
+                    <rect x="170" y="605" width="250" height="16" rx="8" fill="rgba(11,18,32,0.07)" />
+
+                    <circle cx="300" cy="330" r="46" fill="rgba(255,255,255,0.70)" stroke="rgba(11,18,32,0.10)" />
+                    <path d="M270 330c10-30 48-42 70-16 0-30-25-48-50-48-26 0-46 16-50 44 10-8 18-4 30 20z" fill="rgba(11,18,32,0.14)"/>
+
+                    <path
+                      d="M250 400c10-24 30-36 50-36s42 12 52 36l18 60c6 18-4 34-22 34H254c-18 0-28-16-22-34l18-60z"
+                      fill="rgba(255,255,255,0.62)"
+                      stroke="rgba(11,18,32,0.10)"
+                    />
+
+                    <path
+                      d="M250 430c-30 10-52 34-58 62-4 18 14 28 28 18 18-14 34-34 54-44"
+                      fill="rgba(255,255,255,0.55)"
+                      stroke="rgba(11,18,32,0.10)"
+                    />
+                    <path
+                      d="M350 430c30 10 52 34 58 62 4 18-14 28-28 18-18-14-34-34-54-44"
+                      fill="rgba(255,255,255,0.55)"
+                      stroke="rgba(11,18,32,0.10)"
+                    />
+
+                    <path
+                      d="M275 494l-26 150c-2 10 6 18 16 18h32c8 0 14-6 16-14l16-86 16 86c2 8 8 14 16 14h32c10 0 18-8 16-18l-26-150"
+                      fill="rgba(255,255,255,0.56)"
+                      stroke="rgba(11,18,32,0.10)"
+                    />
+
+                    <g opacity="0.6">
+                      <path d="M560 210c26-14 52-16 78-4" stroke="rgba(211, 164, 23, 0.55)" strokeWidth="8" strokeLinecap="round"/>
+                      <path d="M584 186c30-12 60-10 86 6" stroke="rgba(211, 164, 23, 0.55)" strokeWidth="7" strokeLinecap="round"/>
+                      <path d="M542 236c22-12 46-12 70 0" stroke="rgba(211, 164, 23, 0.55)" strokeWidth="7" strokeLinecap="round"/>
+                    </g>
+                  </svg>
+                </div>
+
+                <div className="visual-caption">
+                  <span className="cap-dot" aria-hidden="true" />
+                </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Marquee */}
-      <div className="marquee-wrapper" aria-hidden="true">
-        <div className="marquee">
-          <div className="track">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <span key={i}>{MARQUEE_TEXT}</span>
-            ))}
-          </div>
-        </div>
-      </div>
+      <div className="hero-divider" aria-hidden="true" />
 
-      {/* Scroll indicator */}
-      <div className="scroll-indicator">
-        <span>Scroll to explore</span>
+      <div className="scroll-indicator" aria-hidden="true">
+        <span>Scroll down</span>
         <div className="chevron" />
       </div>
     </header>

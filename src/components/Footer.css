@@ -1,262 +1,294 @@
+/* src/components/Footer.css
+   FOOTER — matches About/Contact look + nav-like buttons
+*/
+
+/* Reuse your About-like tokens */
+:root {
+  --f-bg1: #f4f6fb;
+  --f-bg2: #eef2f8;
+  --f-bg3: #eef1f6;
+
+  --f-text: rgba(70, 82, 110, 0.86);
+  --f-strong: rgba(45, 54, 74, 0.95);
+  --f-title: rgba(70, 82, 110, 0.78);
+
+  --f-line: rgba(70, 82, 110, 0.14);
+  --f-fill: rgba(90, 180, 255, 0.10);
+  --f-glow: rgba(110, 255, 220, 0.10);
+
+  --a1: rgba(90, 180, 255, 0.28);
+  --a2: rgba(110, 255, 220, 0.22);
+  --a3: rgba(255, 210, 120, 0.14);
+
+  --pill-bg: rgba(255, 255, 255, 0.38);
+  --pill-border: rgba(80, 92, 120, 0.18);
+  --shadow: 0 18px 55px rgba(16, 24, 40, 0.12);
+}
+
+[data-theme="dark"],
+.dark,
+.theme-dark {
+  --f-bg1: #070a10;
+  --f-bg2: #0a1020;
+  --f-bg3: #070b14;
+
+  --f-text: rgba(234, 240, 255, 0.70);
+  --f-strong: rgba(255, 255, 255, 0.92);
+  --f-title: rgba(234, 240, 255, 0.50);
+
+  --f-line: rgba(234, 240, 255, 0.10);
+  --f-fill: rgba(90, 180, 255, 0.08);
+  --f-glow: rgba(110, 255, 220, 0.08);
+
+  --a1: rgba(90, 180, 255, 0.20);
+  --a2: rgba(110, 255, 220, 0.14);
+  --a3: rgba(255, 210, 120, 0.10);
+
+  --pill-bg: rgba(255, 255, 255, 0.06);
+  --pill-border: rgba(255, 255, 255, 0.14);
+  --shadow: 0 22px 80px rgba(0, 0, 0, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* ===== Footer wrapper ===== */
 .footer {
   position: relative;
-  margin-top: 80px;
-  padding: 40px 20px 24px;
-  border-top: 1px solid var(--line);
-  background: radial-gradient(
-      circle at top,
-      color-mix(in oklab, var(--accent) 10%, transparent),
-      transparent 60%
-    ),
-    color-mix(in oklab, var(--surface) 96%, transparent);
-  backdrop-filter: blur(24px) saturate(180%);
   overflow: hidden;
+  isolation: isolate;
+  padding: clamp(34px, 5vw, 54px) clamp(18px, 4vw, 44px);
+
+  color: var(--f-text);
+  background:
+    radial-gradient(900px 560px at 18% 25%, var(--a1) 0%, rgba(0,0,0,0) 60%),
+    radial-gradient(900px 560px at 80% 80%, var(--a2) 0%, rgba(0,0,0,0) 60%),
+    radial-gradient(820px 520px at 58% 18%, var(--a3) 0%, rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, var(--f-bg1) 0%, var(--f-bg2) 60%, var(--f-bg3) 100%);
 }
 
-.footer-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-
-/* Glow background circle */
-.footer-glow {
+/* ===== Background layers ===== */
+.footerGrid {
   position: absolute;
-  inset: auto;
-  left: 50%;
-  bottom: -120px;
-  width: 380px;
-  height: 380px;
-  transform: translateX(-50%);
-  background: radial-gradient(
-    circle at center,
-    color-mix(in oklab, var(--accent) 30%, transparent) 0%,
-    transparent 70%
-  );
-  opacity: 0.2;
+  inset: -15%;
+  z-index: 0;
   pointer-events: none;
+  opacity: 0.20;
+  transform: translateZ(0);
+
+  background-image:
+    linear-gradient(var(--f-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--f-line) 1px, transparent 1px),
+    radial-gradient(circle at 25% 40%, var(--f-fill) 0%, transparent 40%),
+    radial-gradient(circle at 75% 60%, var(--f-glow) 0%, transparent 42%);
+  background-size: 22px 22px, 22px 22px, auto, auto;
+
+  animation: footerGridDrift 28s linear infinite;
 }
 
-/* Aurora style soft gradient */
-.footer-aurora {
+@keyframes footerGridDrift {
+  0% { transform: translate3d(0,0,0); }
+  50% { transform: translate3d(-22px,-16px,0); }
+  100% { transform: translate3d(-44px,-32px,0); }
+}
+
+.footerGlow {
+  position: absolute;
+  inset: -30%;
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(46px);
+  opacity: 0.55;
+  transform: translateZ(0);
+
+  background:
+    radial-gradient(circle at 30% 35%, var(--a1) 0%, rgba(0,0,0,0) 58%),
+    radial-gradient(circle at 72% 68%, var(--a2) 0%, rgba(0,0,0,0) 60%),
+    radial-gradient(circle at 55% 18%, var(--a3) 0%, rgba(0,0,0,0) 60%);
+
+  animation: footerGlowDrift 12s ease-in-out infinite alternate;
+}
+
+@keyframes footerGlowDrift {
+  0% { transform: translate3d(-14px,-10px,0) scale(1.02); }
+  50% { transform: translate3d(14px,10px,0) scale(1.06); }
+  100% { transform: translate3d(-8px,16px,0) scale(1.02); }
+}
+
+.footerNoise {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      circle at 10% 0%,
-      color-mix(in oklab, var(--accent) 14%, transparent),
-      transparent 60%
-    ),
-    radial-gradient(
-      circle at 90% 10%,
-      color-mix(in oklab, var(--accent-2) 18%, transparent),
-      transparent 65%
-    );
-  mix-blend-mode: screen;
-  opacity: 0.3;
+  z-index: 2;
   pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
 }
 
-/* Main text */
-.copy {
-  margin: 0 0 18px;
-  font-size: 0.98rem;
-  color: color-mix(in oklab, var(--text) 90%, #ffffff20);
+/* ===== Content ===== */
+.footerInner {
+  position: relative;
+  z-index: 3;
+  max-width: 1300px;
+  margin: 0 auto;
+
+  display: grid;
+  gap: 18px;
 }
 
-.copy strong {
-  font-weight: 700;
-  color: color-mix(in oklab, var(--accent) 80%, var(--text));
+.footerCopy {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--f-text);
 }
 
-.heart {
+.footerCopy strong {
+  color: var(--f-strong);
+  font-weight: 800;
+}
+
+.footerHeart {
   display: inline-block;
-  transform-origin: center;
-  animation: heart-beat 1.6s ease-in-out infinite;
+  transform: translateY(1px);
 }
 
-@keyframes heart-beat {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  30% {
-    transform: scale(1.25);
-  }
-  45% {
-    transform: scale(1.05);
-  }
-}
-
-/* Social icons */
-.footer-socials {
+/* ===== Socials (nav-like circles) ===== */
+.footerSocials {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px;
+  margin: 6px 0 2px 0;
   display: flex;
-  justify-content: center;
   gap: 12px;
-}
-
-.footer-socials li {
-  display: inline-flex;
-}
-
-.social-link {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--card);
-  border: 1px solid var(--card-line);
-  color: var(--text);
-  text-decoration: none;
-  box-shadow: var(--shadow-1);
-  transition: all 0.25s ease;
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.social-link i {
-  font-size: 1.05rem;
-}
-
-.social-link::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at center,
-    color-mix(in oklab, var(--accent) 18%, transparent),
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  z-index: -1;
-}
-
-.social-link:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--accent) 40%, var(--card-line));
-  color: var(--accent);
-  box-shadow: 0 10px 26px color-mix(in oklab, var(--accent) 25%, transparent);
-}
-
-.social-link:hover::before {
-  opacity: 1;
-}
-
-/* Bottom row */
-.footer-bottom {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
   flex-wrap: wrap;
-  margin-top: 10px;
-  font-size: 0.85rem;
-  color: color-mix(in oklab, var(--text) 80%, #ffffff30);
 }
 
-.footer-year {
-  margin: 0;
-}
-
-/* Back to top button */
-.back-to-top {
-  position: relative;
-  width: 34px;
-  height: 34px;
+.footerSocialLink {
+  width: 44px;
+  height: 44px;
   border-radius: 999px;
-  border: 1px solid var(--card-line);
-  background: var(--card);
-  color: var(--text);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: var(--shadow-1);
-  transition: all 0.25s ease;
+
+  display: inline-grid;
+  place-items: center;
+
+  text-decoration: none;
+  color: var(--f-strong);
+
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  box-shadow: none;
+
+  transition: transform 200ms ease, box-shadow 240ms ease, border-color 240ms ease;
+  position: relative;
   overflow: hidden;
-  isolation: isolate;
 }
 
-.back-to-top i {
-  font-size: 0.9rem;
-}
-
-.back-to-top::before {
+/* shine sweep */
+.footerSocialLink::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    color-mix(in oklab, var(--accent) 25%, transparent),
-    color-mix(in oklab, var(--accent-2) 25%, transparent)
-  );
+  inset: -2px;
+  pointer-events: none;
   opacity: 0;
-  transition: opacity 0.25s ease;
-  z-index: -1;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.35) 35%, transparent 70%);
+  transform: translateX(-120%);
+  transition: opacity 200ms ease, transform 650ms ease;
 }
 
-.back-to-top:hover {
+.footerSocialLink:hover {
   transform: translateY(-2px);
-  color: #fff;
-  border-color: transparent;
-  box-shadow: 0 10px 26px color-mix(in oklab, var(--accent) 30%, transparent);
+  box-shadow: var(--shadow);
+  border-color: color-mix(in srgb, var(--a3) 28%, var(--pill-border));
 }
 
-.back-to-top:hover::before {
+.footerSocialLink:hover::after {
   opacity: 1;
+  transform: translateX(120%);
 }
 
-/* Tiny easter egg text */
-.easter-egg {
-  margin-top: 12px;
-  text-align: center;
-  font-size: 0.75rem;
-  letter-spacing: 0.03em;
-  opacity: 0.55;
-  color: color-mix(in oklab, var(--text) 65%, #ffffff40);
+.footerSocialLink i {
+  font-size: 16px;
 }
 
-/* Screen-reader-only (in case navbar css isn't loaded first) */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+/* ===== Bottom row ===== */
+.footerBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--pill-border) 75%, transparent);
+  padding-top: 14px;
+}
+
+.footerYear {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.footerBackTop {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+
+  display: inline-grid;
+  place-items: center;
+
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  color: var(--f-strong);
+  cursor: pointer;
+
+  transition: transform 200ms ease, box-shadow 240ms ease, border-color 240ms ease;
+  position: relative;
   overflow: hidden;
-  clip: rect(0 0 0 0);
-  border: 0;
 }
 
-/* Responsive tweaks */
-@media (max-width: 600px) {
-  .footer {
-    padding: 32px 16px 20px;
-  }
+.footerBackTop::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.35) 35%, transparent 70%);
+  transform: translateX(-120%);
+  transition: opacity 200ms ease, transform 650ms ease;
+}
 
-  .copy {
-    font-size: 0.9rem;
-  }
+.footerBackTop:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-color: color-mix(in srgb, var(--a2) 22%, var(--pill-border));
+}
 
-  .footer-bottom {
-    gap: 10px;
+.footerBackTop:hover::after {
+  opacity: 1;
+  transform: translateX(120%);
+}
+
+@media (max-width: 700px) {
+  .footerBottom {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
-/* Reduced motion: disable animations */
-@media (prefers-reduced-motion: reduce) {
-  .footer,
-  .footer * {
-    animation: none !important;
-    transition: none !important;
-  }
+/* screen-reader utility */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
