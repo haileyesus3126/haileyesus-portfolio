@@ -1,5 +1,5 @@
 import React from "react";
-import "./about.css";
+import "./About.css";
 
 // ✅ Use your real image (recommended)
 import profileImg from "../assets/myphoto.jpg";
