@@ -444,3 +444,9 @@
     height: 200px;
   }
 }
+/* add to Projects.css */
+.project-click {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
