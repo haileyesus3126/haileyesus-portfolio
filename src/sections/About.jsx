@@ -1,47 +1,65 @@
-import React from "react";
-import "./About.css";
+// src/sections/About.jsx
 
-// ✅ Use your real image (recommended)
+import "./About.css";
 import profileImg from "../assets/myphoto.jpg";
+import { useLanguage } from "../theme/LanguageProvider";
 
 export default function AboutSection() {
+  const { text, language } = useLanguage();
+
+  const about = {
+    en: {
+      hello: "Hey, I’m Haileyesus.",
+      lead:
+        "I’m a detail oriented Full Stack MERN Developer passionate about building clean, scalable, and user-friendly web applications.",
+      p1:
+        "I build modern web applications using React, Next.js, Node.js, Express, and MongoDB. I enjoy turning ideas into real products with clean UI, secure APIs, and responsive design.",
+      p2:
+        "My goal is to write code that works well, looks professional, and gives users a smooth experience. I’m always learning better ways to build, improve performance, and organize real world applications.",
+      
+      
+    },
+    am: {
+      hello: "ሰላም፣ እኔ ሃይለየሱስ ነኝ።",
+      lead:
+        "እኔ Full Stack MERN Developer ነኝ። clean, scalable እና user-friendly web applications መገንባት እወዳለሁ።",
+      p1:
+        "React, Next.js, Node.js, Express እና MongoDB በመጠቀም ዘመናዊ web applications እገነባለሁ።",
+      p2:
+        "ግቤ clean UI, secure APIs እና smooth user experience ያለው ሶፍትዌር መገንባት ነው።",
+      
+     
+    },
+  };
+
+  const t = about[language] || about.en;
+
   return (
     <section className="aboutWrap" id="about" aria-label="About section">
-      {/* Top-left logo (keep or remove) */}
-      
-
       <div className="aboutInner">
-        {/* Left content */}
         <div className="aboutLeft">
-          <h1 className="aboutTitle">ABOUT</h1>
+          <h2 className="aboutTitle">{t.hello}</h2>
+
+          <p className="aboutLead">{t.lead}</p>
+
           <div className="aboutRule" />
 
-          <p className="aboutText">
-            Selam, my name is <strong>Haileyesus</strong>. I’m a{" "}
-            <strong>Web Developer</strong> focused on building modern, clean and
-            fast websites. I work with <strong>React</strong>,{" "}
-            <strong>Next.js</strong>, <strong>Node.js</strong> and{" "}
-            <strong>MongoDB</strong>. I care about performance, good UI, and
-            writing code that stays simple and easy to maintain.
-          </p>
+          <div className="aboutText">
+            <p>{t.p1}</p>
+            <p>{t.p2}</p>
+            <p>{t.p3}</p>
+          </div>
 
-          <a
-            className="aboutResume"
-            href="/resume.pdf"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <span className="aboutResumeIcon" aria-hidden="true">
-              ↓
-            </span>
-            <span>resume</span>
-          </a>
+         
         </div>
 
-        {/* Right image */}
-        <div className="aboutRight" aria-hidden="true">
-          <div className="aboutPhotoCard">
-            <img className="aboutPhoto" src={profileImg} alt="Haileyesus" />
+        <div className="aboutRight">
+          <div className="aboutPhotoCircle">
+            <img
+              className="aboutPhoto"
+              src={profileImg}
+              alt="Haileyesus Mesfin"
+            />
           </div>
         </div>
       </div>

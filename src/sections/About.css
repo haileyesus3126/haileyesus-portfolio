@@ -1,390 +1,244 @@
-/* -----------------------------
-   ABOUT — PREMIUM + LIVE (UPDATED v2)
-   - Gradient wash + glow blobs
-   - ✅ Animated square/grid texture (slow drift)
-   - Dark mode fixed via variables
------------------------------- */
+/* ==========================================
+   ABOUT
+========================================== */
 
-/* ✅ Theme tokens (light) */
-:root {
-  --about-bg1: #f4f6fb;
-  --about-bg2: #eef2f8;
-  --about-bg3: #eef1f6;
-
-  --about-text: rgba(70, 82, 110, 0.86);
-  --about-strong: rgba(45, 54, 74, 0.95);
-  --about-title: rgba(70, 82, 110, 0.78);
-
-  --about-line-a: rgba(70, 82, 110, 0.65);
-  --about-line-b: rgba(70, 82, 110, 0.20);
-
-  --about-logo: rgba(67, 76, 92, 0.70);
-
-  --about-border: rgba(80, 92, 120, 0.18);
-  --about-glass: rgba(255, 255, 255, 0.25);
-
-  /* accents */
-  --a1: rgba(90, 180, 255, 0.28);
-  --a2: rgba(110, 255, 220, 0.22);
-  --a3: rgba(255, 210, 120, 0.14);
-
-  /* ✅ square/grid colors */
-  --sq-line: rgba(70, 82, 110, 0.14);
-  --sq-fill: rgba(90, 180, 255, 0.10);
-  --sq-glow: rgba(110, 255, 220, 0.10);
-
-  --shadow-1: 0 22px 50px rgba(16, 24, 40, 0.18);
-  --shadow-2: 0 8px 20px rgba(16, 24, 40, 0.12);
-
-  --radius-card: 34px;
-}
-
-/* ✅ Theme tokens (dark) */
-[data-theme="dark"],
-.dark,
-.theme-dark {
-  --about-bg1: #070a10;
-  --about-bg2: #0a1020;
-  --about-bg3: #070b14;
-
-  --about-text: rgba(234, 240, 255, 0.70);
-  --about-strong: rgba(255, 255, 255, 0.92);
-  --about-title: rgba(234, 240, 255, 0.50);
-
-  --about-line-a: rgba(234, 240, 255, 0.30);
-  --about-line-b: rgba(234, 240, 255, 0.12);
-
-  --about-logo: rgba(234, 240, 255, 0.52);
-
-  --about-border: rgba(255, 255, 255, 0.14);
-  --about-glass: rgba(255, 255, 255, 0.06);
-
-  --a1: rgba(90, 180, 255, 0.20);
-  --a2: rgba(110, 255, 220, 0.14);
-  --a3: rgba(255, 210, 120, 0.10);
-
-  /* ✅ square/grid colors in dark */
-  --sq-line: rgba(234, 240, 255, 0.10);
-  --sq-fill: rgba(90, 180, 255, 0.08);
-  --sq-glow: rgba(110, 255, 220, 0.08);
-
-  --shadow-1: 0 22px 70px rgba(0, 0, 0, 0.55);
-  --shadow-2: 0 10px 26px rgba(0, 0, 0, 0.45);
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    scroll-behavior: auto !important;
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* -----------------------------
-   Section wrapper
------------------------------- */
 .aboutWrap {
-  position: relative;
   min-height: 100vh;
-  padding: clamp(28px, 4vw, 44px);
-  overflow: hidden;
-  isolation: isolate;
-  color: var(--about-text);
-
-  background:
-    radial-gradient(1100px 650px at 18% 28%, var(--a1) 0%, rgba(0,0,0,0) 60%),
-    radial-gradient(980px 620px at 78% 76%, var(--a2) 0%, rgba(0,0,0,0) 62%),
-    radial-gradient(820px 520px at 58% 18%, var(--a3) 0%, rgba(0,0,0,0) 60%),
-    linear-gradient(180deg, var(--about-bg1) 0%, var(--about-bg2) 55%, var(--about-bg3) 100%);
-}
-
-/* ✅ SQUARE GRID LAYER (different than hero) — SLOW MOVEMENT */
-.aboutWrap::before {
-  content: "";
-  position: absolute;
-  inset: -10%;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.22;
-  transform: translateZ(0);
-
-  /* different vibe:
-     - 2 grid layers (small + big squares)
-     - plus soft square “cells” */
-  background-image:
-    /* small grid */
-    linear-gradient(var(--sq-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--sq-line) 1px, transparent 1px),
-
-    /* big grid (fainter) */
-    linear-gradient(rgba(0,0,0,0) 0 47px, color-mix(in srgb, var(--sq-line) 70%, transparent) 48px),
-    linear-gradient(90deg, rgba(0,0,0,0) 0 47px, color-mix(in srgb, var(--sq-line) 70%, transparent) 48px),
-
-    /* soft square “cells” tint */
-    radial-gradient(circle at 18% 28%, var(--sq-fill) 0%, transparent 40%),
-    radial-gradient(circle at 74% 68%, var(--sq-glow) 0%, transparent 42%);
-
-  background-size:
-    22px 22px,
-    22px 22px,
-    48px 48px,
-    48px 48px,
-    auto,
-    auto;
-
-  background-position:
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0;
-
-  animation: aboutSquaresDrift 26s linear infinite;
-}
-
-/* ✅ slow drift animation (no distracting movement) */
-@keyframes aboutSquaresDrift {
-  0%   { transform: translate3d(0, 0, 0); }
-  50%  { transform: translate3d(-24px, -18px, 0); }
-  100% { transform: translate3d(-48px, -36px, 0); }
-}
-
-/* ✅ Live glow blobs layer */
-.aboutWrap::after {
-  content: "";
-  position: absolute;
-  inset: -30%;
-  z-index: 1;
-  pointer-events: none;
-  filter: blur(42px);
-  opacity: 0.55;
-
-  background:
-    radial-gradient(circle at 30% 35%, var(--a1) 0%, rgba(0,0,0,0) 55%),
-    radial-gradient(circle at 70% 70%, var(--a2) 0%, rgba(0,0,0,0) 58%),
-    radial-gradient(circle at 55% 20%, var(--a3) 0%, rgba(0,0,0,0) 58%);
-
-  animation: aboutGlowDrift 12s ease-in-out infinite alternate;
-  transform: translateZ(0);
-}
-
-@keyframes aboutGlowDrift {
-  0%   { transform: translate3d(-18px, -10px, 0) scale(1.02); }
-  50%  { transform: translate3d(16px, 8px, 0) scale(1.06); }
-  100% { transform: translate3d(-8px, 18px, 0) scale(1.02); }
-}
-
-/* ✅ subtle grain/noise overlay (top-most) */
-.aboutWrap .aboutNoise {
-  display: none;
-}
-
-/* Use a dedicated overlay so grid + glow stay clean */
-.aboutWrap::marker { content: ""; } /* harmless reset */
-
-/* Extra noise layer using a real pseudo element on inner wrapper */
-.aboutWrap > .aboutInner::before {
-  content: "";
-  position: absolute;
-  inset: -40px;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.10;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
-}
-
-/* -----------------------------
-   Layout
------------------------------- */
-.aboutInner {
-  position: relative;
-  z-index: 3;
-  max-width: 1300px;
-  margin: 0 auto;
+  padding: var(--section-padding);
+  background: var(--bg);
+  color: var(--text);
   display: flex;
-  gap: clamp(24px, 4vw, 56px);
   align-items: center;
 }
 
-.aboutLeft {
-  flex: 1 1 60%;
-  padding-left: clamp(12px, 2vw, 26px);
+.aboutInner {
+  width: min(1200px, 100%);
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 90px;
+  align-items: center;
 }
 
-.aboutRight {
-  flex: 1 1 40%;
-  position: relative;
-  display: flex;
-  justify-content: flex-end;
-}
+/* ===========================
+   LEFT
+=========================== */
 
-/* -----------------------------
-   Top-left logo
------------------------------- */
-.aboutLogo {
-  position: absolute;
-  left: clamp(20px, 3vw, 44px);
-  top: clamp(16px, 2.5vw, 34px);
-  color: var(--about-logo);
-  z-index: 4;
-}
-
-/* -----------------------------
-   Title + line
------------------------------- */
 .aboutTitle {
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 800;
-  letter-spacing: 0.10em;
-   font-size: clamp(26px, 4vw, 56px);
-  color: var(--about-title);
- 
 
+  color: var(--text);
+
+  font-size: var(--title-md);
+
+  font-weight: 800;
+
+  line-height: 1.08;
+
+  letter-spacing: -1.8px;
+}
+
+.aboutLead {
+  max-width: 760px;
+
+  margin-top: 28px;
+
+  color: var(--text);
+
+  font-size: var(--text-xl);
+
+  font-weight: 700;
+
+  line-height: 1.55;
 }
 
 .aboutRule {
-  width: 100%;
-  height: 2px;
-  margin-top: 12px;
-  margin-bottom: 26px;
-  background: linear-gradient(90deg, var(--about-line-a), var(--about-line-b), var(--about-line-a));
-  border-radius: 999px;
+  width: 120px;
+  height: 3px;
+
+  margin: 36px 0;
+
+  background: var(--accent);
 }
 
-/* -----------------------------
-   Text
------------------------------- */
 .aboutText {
-  max-width: 640px;
-  margin: 0 0 28px 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 18px;
-  line-height: 1.7;
-  color: var(--about-text);
+  max-width: 820px;
+
+  display: grid;
+
+  gap: 20px;
+}
+
+.aboutText p {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: var(--text-md);
+
+  line-height: 1.8;
 }
 
 .aboutText strong {
-  color: var(--about-strong);
-  font-weight: 800;
+  color: var(--text);
+  font-weight: 700;
 }
 
-/* resume link */
+/* ===========================
+   BUTTON
+=========================== */
+
 .aboutResume {
+  margin-top: 40px;
+
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 18px;
-  color: color-mix(in srgb, var(--about-text) 92%, white);
-  opacity: 0.98;
-  transition: transform 200ms ease, opacity 200ms ease;
+  gap: 12px;
+
+  padding: 14px 24px;
+
+  border-radius: 999px;
+
+  color: #fff;
+
+  background: rgba(20, 184, 212, 0.08);
+
+  border: 1px solid rgba(20, 184, 212, 0.45);
+
+  font-size: var(--text-sm);
+
+  font-weight: 700;
+
+  transition: .3s ease;
 }
 
 .aboutResume:hover {
-  transform: translateY(-1px);
-  opacity: 1;
+
+  background: var(--accent);
+
+  border-color: var(--accent);
+
+  transform: translateY(-4px);
+
 }
 
-.aboutResumeIcon {
-  display: inline-grid;
-  place-items: center;
-  width: 26px;
-  height: 26px;
-  border-radius: 999px;
-  color: var(--about-strong);
+/* ===========================
+   RIGHT
+=========================== */
+
+.aboutRight {
+
+  display: flex;
+
+  justify-content: center;
+
 }
 
-/* -----------------------------
-   Photo card
------------------------------- */
-.aboutPhotoCard {
-  position: relative;
-  width: min(420px, 38vw);
-  height: min(560px, 70vh);
-  border-radius: var(--radius-card);
+.aboutPhotoCircle {
+
+  width: min(430px, 100%);
+
+  aspect-ratio: 1;
+
+  border-radius: 50%;
+
   overflow: hidden;
 
-  background: var(--about-glass);
-  border: 1px solid var(--about-border);
-  box-shadow: var(--shadow-1), var(--shadow-2);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
+  box-shadow: var(--shadow);
 
-/* animated highlight sweep */
-.aboutPhotoCard::before {
-  content: "";
-  position: absolute;
-  inset: -40%;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.50;
-  transform: rotate(18deg);
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.18) 40%,
-    rgba(255,255,255,0.00) 70%
-  );
-  animation: cardSweep 7s ease-in-out infinite;
-}
-
-@keyframes cardSweep {
-  0%   { transform: translateX(-18%) rotate(18deg); }
-  50%  { transform: translateX(18%) rotate(18deg); }
-  100% { transform: translateX(-18%) rotate(18deg); }
 }
 
 .aboutPhoto {
+
   width: 100%;
+
   height: 100%;
+
   object-fit: cover;
-  display: block;
-  filter: saturate(1.03) contrast(1.03) brightness(1.02);
+
+  object-position: center top;
+
 }
 
-/* tint overlay */
-.aboutPhotoCard::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  background: linear-gradient(
-    120deg,
-    color-mix(in srgb, var(--a1) 55%, transparent) 0%,
-    color-mix(in srgb, var(--a2) 45%, transparent) 55%,
-    color-mix(in srgb, var(--a3) 45%, transparent) 100%
-  );
-  mix-blend-mode: screen;
-  opacity: 0.75;
+/* ===========================
+   TABLET
+=========================== */
+
+@media (max-width:950px){
+
+.aboutWrap{
+
+padding:100px 22px;
+
 }
 
-/* -----------------------------
-   Responsive
------------------------------- */
-@media (max-width: 980px) {
-  .aboutInner {
-    flex-direction: column;
-    align-items: stretch;
-    padding-top: 64px;
-  }
+.aboutInner{
 
-  .aboutLeft {
-    padding-left: 0;
-  }
+grid-template-columns:1fr;
 
-  .aboutRight {
-    justify-content: center;
-  }
+gap:60px;
 
-  .aboutPhotoCard {
-    width: min(520px, 92vw);
-    height: min(560px, 70vh);
-  }
+}
+
+.aboutRight{
+
+order:-1;
+
+}
+
+.aboutLeft{
+
+text-align:center;
+
+}
+
+.aboutRule{
+
+margin-inline:auto;
+
+}
+
+.aboutText{
+
+margin:auto;
+
+}
+
+.aboutPhotoCircle{
+
+width:min(340px,100%);
+
+}
+
+}
+
+/* ===========================
+   MOBILE
+=========================== */
+
+@media (max-width:600px){
+
+.aboutWrap{
+
+padding:90px 18px;
+
+}
+
+.aboutPhotoCircle{
+
+width:280px;
+
+}
+
+.aboutResume{
+
+width:100%;
+
+max-width:260px;
+
+justify-content:center;
+
+}
+
 }

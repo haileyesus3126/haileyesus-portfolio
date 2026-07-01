@@ -1,62 +1,48 @@
-// src/sections/Contact.jsx
-import React from "react";
 import "./Contact.css";
 
 export default function Contact() {
   return (
-    <section className="contactWrap" id="contact" aria-label="Contact section">
+    <section className="contactWrap" id="contact">
+      <div className="contactOverlay" />
+
       <div className="contactInner">
-        {/* Title */}
-        <div className="contactHeader">
-          <h1 className="contactTitle">CONTACT</h1>
-          <div className="contactRule" />
-        </div>
+        <h2 className="contactTitle">Get In Touch</h2>
 
-        {/* Simple row like screenshot (About typography/colors) */}
-        <div className="contactRow" aria-live="polite">
-          {/* Left */}
-          <div className="contactCol">
-            <p className="contactLabel">MAIL</p>
+        <div className="contactRule" />
 
-            <a className="contactLink" href="mailto:Haileyesus2024@gmail.com">
-              <span className="contactArrow" aria-hidden="true">
-                ↗
-              </span>
-              <span className="contactValue">Haileyesus2024@gmail.com</span>
-            </a>
-          </div>
+        <p className="contactText">
+          Have a project in mind or just want to say hi?
+          <br />
+          Feel free to send me a message!
+        </p>
 
-          {/* Right */}
-          <div className="contactCol">
-            <p className="contactLabel">My links</p>
+        <form
+          className="contactForm"
+          action="https://formspree.io/f/YOUR_FORM_ID"
+          method="POST"
+        >
+          <label>
+            Name
+            <input type="text" name="name" required />
+          </label>
 
-            <div className="contactStack">
-              <a
-                className="contactLink"
-                href="https://github.com/haileyesus3126"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="contactArrow" aria-hidden="true">
-                  ↗
-                </span>
-                <span className="contactValue">github</span>
-              </a>
+          <label>
+            Email
+            <input type="email" name="email" required />
+          </label>
 
-              <a
-                className="contactLink"
-                href="https://www.linkedin.com/in/haileyesus3126"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="contactArrow" aria-hidden="true">
-                  ↗
-                </span>
-                <span className="contactValue">linkedin</span>
-              </a>
-            </div>
-          </div>
-        </div>
+          <label>
+            Subject
+            <input type="text" name="subject" required />
+          </label>
+
+          <label>
+            Message
+            <textarea name="message" rows="4" required />
+          </label>
+
+          <button type="submit">Send Message</button>
+        </form>
       </div>
     </section>
   );

@@ -1,51 +1,20 @@
 // src/data/projectsData.js
 
-// ====== COVER IMAGES ======
-import coverRuthStore from "../assets/projects/chat-app.jpg";
-import coverTaskManagement from "../assets/projects/inventoryApp1.jpg";
-import coverMarketplace from "../assets/projects/portfolio66.jpg";
-import coverDoctor from "../assets/projects/social-app.jpg";
-import coverChat from "../assets/projects/chatApp1.jpg";
-import coverMovie from "../assets/projects/2mernBlogee.jpg";
+import ruthHome from "../assets/projects/ruth-home.jpg";
+import ruthAdmin from "../assets/projects/ruth-admin.jpg";
+import ruthProducts from "../assets/projects/ruth-products.jpg";
 
-// ====== RUTH STORE SCREENSHOTS ======
-import ruth01 from "../assets/projects/screens/amazon/01-overview.jpg";
-import ruth02 from "../assets/projects/screens/amazon/02-product.jpg";
-import ruth03 from "../assets/projects/screens/amazon/03-cart.jpg";
-import ruth04 from "../assets/projects/screens/amazon/04-checkout.jpg";
+import taskDashboard from "../assets/projects/task-dashboard.jpg";
+import taskCreate from "../assets/projects/task-create.jpg";
+import taskUsers from "../assets/projects/task-users.jpg";
 
-// ====== TASK MANAGEMENT SCREENSHOTS ======
-import task01 from "../assets/projects/screens/crm/01-dashboard.jpg";
-import task02 from "../assets/projects/screens/crm/02-customers.jpg";
-import task03 from "../assets/projects/screens/crm/03-pipeline.jpg";
-import task04 from "../assets/projects/screens/crm/04-lead-detail.jpg";
+import libraryHome from "../assets/projects/library-home.jpg";
+import libraryBooks from "../assets/projects/library-books.jpg";
+import libraryAdmin from "../assets/projects/library-admin.jpg";
 
-// ====== MARKETPLACE SCREENSHOTS ======
-import market01 from "../assets/projects/screens/marketplace/01-overview.jpg";
-import market02 from "../assets/projects/screens/marketplace/02-vendor-signup.jpg";
-import market03 from "../assets/projects/screens/marketplace/03-vendor-dashboard.jpg";
-import market04 from "../assets/projects/screens/marketplace/04-product-create.jpg";
-
-// ====== DOCTOR SCREENSHOTS ======
-import doc01 from "../assets/projects/screens/doctor/01-home.jpg";
-import doc02 from "../assets/projects/screens/doctor/02-doctors.jpg";
-import doc03 from "../assets/projects/screens/doctor/03-doctor-profile.jpg";
-import doc04 from "../assets/projects/screens/doctor/04-booking.jpg";
-
-// ====== CHAT SCREENSHOTS ======
-import chat01 from "../assets/projects/screens/support-chat/01-login.jpg";
-import chat02 from "../assets/projects/screens/support-chat/02-chat-list.jpg";
-import chat03 from "../assets/projects/screens/support-chat/03-chat-room.jpg";
-import chat04 from "../assets/projects/screens/support-chat/04-typing-status.jpg";
-
-// ====== MOVIE SCREENSHOTS ======
-import movie01 from "../assets/projects/screens/movie/01-home.jpg";
-import movie02 from "../assets/projects/screens/movie/02-search.jpg";
-import movie03 from "../assets/projects/screens/movie/03-category.jpg";
-import movie04 from "../assets/projects/screens/movie/04-details.jpg";
-
-const LIVE_URL = "https://ruth-store-7.vercel.app/";
-const GITHUB_URL = "https://github.com/haileyesus3126/Ruth-Store-7";
+import movieHome from "../assets/projects/movie-home.jpg";
+import movieDetails from "../assets/projects/movie-details.jpg";
+import movieSearch from "../assets/projects/movie-search.jpg";
 
 const slugify = (text) =>
   text
@@ -59,148 +28,61 @@ export const PROJECTS = [
   {
     title: "Ruth Store E-Commerce",
     slug: slugify("Ruth Store E-Commerce"),
-    desc:
-      "A full-stack MERN e-commerce platform for gifts, greeting cards, keepsakes, and special occasion products.",
-    image: coverRuthStore,
-    live: LIVE_URL,
-    code: GITHUB_URL,
-    technologies: [
-      "React",
-      "React Router",
-      "Context API",
-      "Node.js",
-      "Express.js",
-      "MongoDB",
-      "JWT",
-      "Multer",
-    ],
-    features: [
-      "User Authentication",
-      "Product Management",
-      "Shopping Cart",
-      "Wishlist",
-      "Checkout",
-      "Order Management",
-      "Admin Dashboard",
-      "Image Upload",
-      "Responsive Design",
-    ],
-    screenshots: [ruth01, ruth02, ruth03, ruth04],
+    category: "Full Stack",
+    status: "Live",
+    desc: "Online store with login, cart, checkout, and admin dashboard.",
+    longDesc:
+      "Ruth Store is a full featured e-commerce platform where users can browse products, add items to cart, and securely checkout. Admins can manage products, orders, customers, brands, and analytics.",
+    image: ruthHome,
+    screenshots: [ruthHome, ruthAdmin, ruthProducts],
+    live: "https://ruth-store-7.vercel.app/",
+    code: "https://github.com/haileyesus3126/Ruth-Store-7",
+    tech: ["React", "Node.js", "MongoDB", "Express.js"],
   },
 
   {
     title: "Task Management System",
     slug: slugify("Task Management System"),
-    desc:
-      "A full-stack task management system for creating, assigning, tracking, and reviewing team tasks.",
-    image: coverTaskManagement,
-    live: LIVE_URL,
-    code: GITHUB_URL,
-    technologies: [
-      "React",
-      "React Router",
-      "Context API",
-      "Node.js",
-      "Express.js",
-      "MongoDB",
-      "JWT",
-      "Multer",
-    ],
-    features: [
-      "User Authentication",
-      "Role-Based Access",
-      "Task Creation",
-      "Task Assignment",
-      "Progress Tracking",
-      "File Uploads",
-      "Comments",
-      "Dashboard Statistics",
-      "Responsive Design",
-    ],
-    screenshots: [task01, task02, task03, task04],
+    category: "Full Stack",
+    status: "Live",
+    desc: "Team task app with login, task assignment, file upload, and dashboard.",
+    longDesc:
+      "A productivity system built for managing team tasks, users, assignments, uploaded files, notifications, and dashboard statistics.",
+    image: taskDashboard,
+    screenshots: [taskDashboard, taskCreate, taskUsers],
+    live: "https://task-management-app-nine-coral.vercel.app/login",
+    code: "https://github.com/haileyesus3126/task-management-app-",
+    tech: ["React", "Node.js", "MongoDB", "Express.js"],
   },
 
-{
+  {
     title: "Ruth Books Library",
     slug: slugify("Ruth Books Library"),
-    desc:
-      "A free digital library website for readers in Ethiopia. Users can log in, search by category, and download PDF books easily.",
-    image: coverMarketplace,
-    live: LIVE_URL,
-    code: GITHUB_URL,
-    technologies: ["React", "Node.js", "Express.js", "MongoDB", "JWT"],
-    features: [
-      "User Authentication",
-      "Category Filter",
-      "Advanced Book Search",
-      "Instant PDF Download",
-      "Book Upload Tool",
-      "Admin Book Approval",
-      "Responsive Design",
-    ],
-    screenshots: [market01, market02, market03, market04],
+    category: "Full Stack",
+    status: "In Development",
+    desc: "Book library with search, categories, PDF download, and admin tools.",
+    longDesc:
+      "A digital book library platform with book management, category filtering, PDF downloads, admin tools, and a clean reading-focused user experience.",
+    image: libraryHome,
+    screenshots: [libraryHome, libraryBooks, libraryAdmin],
+    live: "#",
+    code: "#",
+    tech: ["Next.js", "TypeScript", "MongoDB"],
   },
 
   {
-    title: "Doctor Appointment System",
-    slug: slugify("Doctor Appointment System"),
-    desc:
-      "A healthcare appointment booking platform where patients can search doctors and book appointments.",
-    image: coverDoctor,
-    live: LIVE_URL,
-    code: GITHUB_URL,
-    technologies: ["React", "Node.js", "Express.js", "MongoDB"],
-    features: [
-      "Doctor Listing",
-      "Doctor Profile",
-      "Appointment Booking",
-      "User Accounts",
-      "Appointment History",
-      "Doctor Dashboard",
-      "Responsive Design",
-    ],
-    screenshots: [doc01, doc02, doc03, doc04],
-  },
-
-  {
-    title: "Real-Time Chat Application",
-    slug: slugify("Real-Time Chat Application"),
-    desc:
-      "A real-time messaging application for private conversations and support chat.",
-    image: coverChat,
-    live: LIVE_URL,
-    code: GITHUB_URL,
-    technologies: ["React", "Socket.IO", "Node.js", "Express.js", "MongoDB"],
-    features: [
-      "Real-Time Messaging",
-      "Private Chat",
-      "Online Status",
-      "Typing Indicators",
-      "Chat History",
-      "User Authentication",
-      "Responsive UI",
-    ],
-    screenshots: [chat01, chat02, chat03, chat04],
-  },
-
-  {
-    title: "Movie Application",
-    slug: slugify("Movie Application"),
-    desc:
-      "A movie discovery platform where users can browse movies, search by title, and view movie details.",
-    image: coverMovie,
-    live: LIVE_URL,
-    code: GITHUB_URL,
-    technologies: ["React", "JavaScript", "REST API", "CSS"],
-    features: [
-      "Movie Search",
-      "Category Browsing",
-      "Movie Details",
-      "Trailer Section",
-      "Favorites",
-      "Responsive Design",
-    ],
-    screenshots: [movie01, movie02, movie03, movie04],
+    title: "Haile Movie App",
+    slug: slugify("Haile Movie App"),
+    category: "Frontend",
+    status: "Live",
+    desc: "Movie app with search, trending movies, and movie details.",
+    longDesc:
+      "A responsive movie discovery application where users can browse trending movies, search films, view movie details, and explore categories using a movie API.",
+    image: movieHome,
+    screenshots: [movieHome, movieDetails, movieSearch],
+    live: "https://haile-movie.vercel.app/",
+    code: "https://github.com/haileyesus3126/Haile-movie",
+    tech: ["React", "REST API", "JavaScript"],
   },
 ];
 

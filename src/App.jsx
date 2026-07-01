@@ -1,24 +1,20 @@
-import React from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
-
 import Home from "./pages/Home";
-
- 
-
 
 function App() {
   return (
     <>
       <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+        </Routes>
+      </main>
 
       <BackToTop />
       <Footer />

@@ -1,452 +1,236 @@
-/* ---------------------------------------
-   PROJECTS — PREMIUM + LIVE (AMAZING)
-   - Square grid background (different from hero/about)
-   - Slow drifting motion
-   - Aurora glow + soft noise
-   - Premium project cards w/ shine + border glow
-   - Full dark mode support
----------------------------------------- */
-
-/* ✅ Theme tokens */
-:root {
-  --p-bg1: #ffffff;
-  --p-bg2: #f5f7fb;
-  --p-text: #0b1220;
-  --p-muted: rgba(11, 18, 32, 0.66);
-  --p-border: rgba(11, 18, 32, 0.10);
-
-  --eth-green: #0b6b3a;
-  --eth-gold: #f2c94c;
-  --eth-red: #d64545;
-
-  --p-card: rgba(255, 255, 255, 0.65);
-  --p-card2: rgba(255, 255, 255, 0.45);
-
-  --shadow: 0 18px 60px rgba(0, 0, 0, 0.10);
-  --shadow-2: 0 28px 90px rgba(0, 0, 0, 0.14);
-
-  --container: 1120px;
-
-  /* square grid */
-  --sq-line: rgba(11, 18, 32, 0.10);
-  --sq-line2: rgba(11, 18, 32, 0.06);
-  --sq-fill: rgba(242, 201, 76, 0.08);
-  --sq-glow: rgba(11, 107, 58, 0.08);
-}
-
-[data-theme="dark"],
-.dark,
-.theme-dark {
-  --p-bg1: #070a10;
-  --p-bg2: #0b1020;
-  --p-text: #eaf0ff;
-  --p-muted: rgba(234, 240, 255, 0.66);
-  --p-border: rgba(234, 240, 255, 0.10);
-
-  --p-card: rgba(255, 255, 255, 0.06);
-  --p-card2: rgba(255, 255, 255, 0.04);
-
-  --shadow: 0 22px 90px rgba(0, 0, 0, 0.55);
-  --shadow-2: 0 28px 120px rgba(0, 0, 0, 0.62);
-
-  --sq-line: rgba(234, 240, 255, 0.10);
-  --sq-line2: rgba(234, 240, 255, 0.06);
-  --sq-fill: rgba(242, 201, 76, 0.06);
-  --sq-glow: rgba(11, 107, 58, 0.06);
-}
-
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    scroll-behavior: auto !important;
-    transition: none !important;
-    animation: none !important;
-  }
-}
-
-/* ---------------------------------------
-   SECTION
----------------------------------------- */
 .projects {
-  position: relative;
-  overflow: hidden;
-  padding: clamp(80px, 10vh, 110px) clamp(16px, 4vw, 40px);
-  background: linear-gradient(180deg, var(--p-bg1), var(--p-bg2));
-  color: var(--p-text);
-  isolation: isolate;
+  padding: var(--section-padding);
+  background: var(--bg);
+  color: var(--text);
 }
 
-/* ✅ Square background (different style than hero/about) */
-.projects::before {
-  content: "";
-  position: absolute;
-  inset: -15%;
-  z-index: 0;
-  pointer-events: none;
-  opacity: 0.22;
-
-  background-image:
-    /* small crisp grid */
-    linear-gradient(var(--sq-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--sq-line) 1px, transparent 1px),
-
-    /* larger grid (softer) */
-    linear-gradient(var(--sq-line2) 1px, transparent 1px),
-    linear-gradient(90deg, var(--sq-line2) 1px, transparent 1px),
-
-    /* “square cells” accent glows */
-    radial-gradient(circle at 20% 30%, var(--sq-fill) 0%, transparent 42%),
-    radial-gradient(circle at 80% 70%, var(--sq-glow) 0%, transparent 45%),
-    radial-gradient(circle at 55% 20%, rgba(214, 69, 69, 0.06) 0%, transparent 45%);
-
-  background-size:
-    22px 22px,
-    22px 22px,
-    64px 64px,
-    64px 64px,
-    auto,
-    auto,
-    auto;
-
-  background-position:
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0,
-    0 0;
-
-  animation: projectsGridDrift 30s linear infinite;
-  transform: translateZ(0);
-}
-
-@keyframes projectsGridDrift {
-  0%   { transform: translate3d(0, 0, 0); }
-  50%  { transform: translate3d(-26px, -18px, 0); }
-  100% { transform: translate3d(-52px, -36px, 0); }
-}
-
-/* ✅ Aurora glow layer (you already have a div) */
-.projects-aurora {
-  position: absolute;
-  inset: -30%;
-  z-index: 1;
-  pointer-events: none;
-  filter: blur(48px);
-  opacity: 0.45;
-
-  background:
-    radial-gradient(circle at 18% 30%, rgba(242, 201, 76, 0.18) 0%, transparent 55%),
-    radial-gradient(circle at 75% 25%, rgba(11, 107, 58, 0.16) 0%, transparent 58%),
-    radial-gradient(circle at 70% 80%, rgba(214, 69, 69, 0.14) 0%, transparent 62%);
-
-  animation: auroraFloat 10s ease-in-out infinite alternate;
-  transform: translateZ(0);
-}
-
-@keyframes auroraFloat {
-  0%   { transform: translate3d(-14px, -10px, 0) scale(1.03); }
-  50%  { transform: translate3d(16px, 12px, 0) scale(1.08); }
-  100% { transform: translate3d(-10px, 18px, 0) scale(1.03); }
-}
-
-/* ✅ Subtle noise (premium film grain) */
-.projects::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.08;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
-}
-
-/* ---------------------------------------
-   INNER + HEADER
----------------------------------------- */
-.projects-inner {
-  position: relative;
-  z-index: 3;
-  max-width: var(--container);
+.projectsInner {
+  max-width: 1280px;
   margin: 0 auto;
 }
 
-.eyebrow {
-  margin: 0 0 10px 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 900;
-  letter-spacing: 0.22px;
-  font-size: 13px;
-  color: var(--p-muted);
-
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+.projectsHeader {
+  margin-bottom: 90px;
 }
 
-.eyebrow::before {
-  content: "";
-  width: 18px;
-  height: 2px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, var(--eth-green), var(--eth-gold), var(--eth-red));
-  opacity: 0.9;
-}
-
-.projects-title {
+.projectsHeader h2 {
   margin: 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 950;
-  letter-spacing: -0.8px;
-  font-size: clamp(34px, 4.8vw, 56px);
+  color: var(--text);
+  font-size: var(--title-md);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -1.8px;
 }
 
-.projects-lead {
-  margin: 12px 0 18px 0;
-  max-width: 68ch;
-  color: var(--p-muted);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 1.85;
+.projectsRule {
+  width: 120px;
+  height: 3px;
+  margin-top: 28px;
+  background: var(--accent);
 }
 
-.projects-divider {
-  position: relative;
-  height: 20px;
-  margin: 12px 0 34px 0;
-}
-
-.projects-divider .line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 9px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--p-border), transparent);
-}
-
-.projects-divider .glow {
-  position: absolute;
-  left: 12%;
-  right: 12%;
-  top: 5px;
-  height: 10px;
-  filter: blur(10px);
-  opacity: 0.55;
-  background: linear-gradient(90deg, transparent, rgba(242, 201, 76, 0.35), rgba(11, 107, 58, 0.30), rgba(214, 69, 69, 0.25), transparent);
-}
-
-/* ---------------------------------------
-   GRID
----------------------------------------- */
-.projects-grid {
+.projectsList {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(14px, 2vw, 18px);
+  gap: 140px;
 }
 
-/* ---------------------------------------
-   CARD
----------------------------------------- */
-.project-card {
+.projectShowcase {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.projectShowcase.reverse {
+  grid-template-columns: 0.85fr 1.15fr;
+}
+
+.projectShowcase.reverse .projectImages {
+  order: 2;
+}
+
+.projectShowcase.reverse .projectContent {
+  order: 1;
+}
+
+.projectImages {
   position: relative;
-  border-radius: 22px;
-  overflow: hidden;
-  border: 1px solid var(--p-border);
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--p-card) 92%, transparent),
-    color-mix(in srgb, var(--p-card2) 92%, transparent)
-  );
-  box-shadow: none;
-  transform: translateZ(0);
-  transition: box-shadow 240ms ease, border-color 240ms ease;
+  min-height: 540px;
 }
 
-.project-card:hover {
-  box-shadow: var(--shadow);
-  border-color: color-mix(in srgb, var(--eth-gold) 22%, var(--p-border));
-}
-
-/* Premium border glow line */
-.card-border {
+.projectImg {
   position: absolute;
-  inset: 0;
-  border-radius: 22px;
-  pointer-events: none;
-  background:
-    linear-gradient(var(--p-bg1), var(--p-bg1)) padding-box,
-    linear-gradient(90deg, rgba(11,107,58,0.45), rgba(242,201,76,0.45), rgba(214,69,69,0.40)) border-box;
-  border: 1px solid transparent;
-  opacity: 0;
-  transition: opacity 240ms ease;
-}
-
-.project-card:hover .card-border {
-  opacity: 0.50;
-}
-
-/* ---------------------------------------
-   THUMB
----------------------------------------- */
-.project-thumb {
-  position: relative;
-  height: 190px;
-  overflow: hidden;
-  background: rgba(0,0,0,0.02);
-}
-
-.project-thumb img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   display: block;
-  transform: scale(1.02);
-  transition: transform 420ms ease, filter 420ms ease;
-  filter: saturate(1.02) contrast(1.03);
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  transition: 0.35s ease;
 }
 
-.project-card:hover .project-thumb img {
-  transform: scale(1.06);
-  filter: saturate(1.06) contrast(1.06);
+.projectImgMain {
+  left: 0;
+  top: 0;
+  width: 72%;
+  height: 380px;
+  z-index: 1;
 }
 
-/* Shine sweep on hover */
-.project-thumb .shine {
-  position: absolute;
-  inset: -2px;
-  pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(
-    120deg,
-    transparent 0%,
-    rgba(255,255,255,0.35) 35%,
-    transparent 70%
-  );
-  transform: translateX(-120%);
-  transition: opacity 240ms ease, transform 600ms ease;
+.projectImgSecond {
+  right: 0;
+  top: 105px;
+  width: 48%;
+  height: 290px;
+  z-index: 2;
 }
 
-.project-card:hover .project-thumb .shine {
-  opacity: 1;
-  transform: translateX(120%);
+.projectImgThird {
+  right: 40px;
+  bottom: 0;
+  width: 38%;
+  height: 270px;
+  z-index: 3;
 }
 
-/* ---------------------------------------
-   BODY
----------------------------------------- */
-.project-body {
-  padding: 16px 16px 14px 16px;
+.projectImages:hover .projectImgMain {
+  transform: translateY(-8px);
 }
 
-.project-name {
-  margin: 0 0 8px 0;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-weight: 950;
-  font-size: 16px;
-  letter-spacing: -0.2px;
-  color: var(--p-text);
+.projectImages:hover .projectImgSecond {
+  transform: translateY(-14px);
 }
 
-.project-desc {
+.projectImages:hover .projectImgThird {
+  transform: translateY(-20px);
+}
+
+.projectCategory {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.projectContent h3 {
   margin: 0;
-  color: var(--p-muted);
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 13px;
-  line-height: 1.75;
-  max-width: 60ch;
+  color: var(--text);
+  font-size: var(--title-sm);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -1.4px;
 }
 
-/* ---------------------------------------
-   ACTIONS
----------------------------------------- */
-.project-actions {
+.projectDesc {
+  margin-top: 22px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.projectLongDesc {
+  margin-top: 28px;
+  padding-top: 28px;
+  max-width: 720px;
+  color: var(--muted);
+  font-size: var(--text-md);
+  line-height: 1.8;
+  border-top: 3px solid var(--accent);
+}
+
+.projectTech {
+  margin-top: 34px;
   display: flex;
-  gap: 10px;
-  padding: 0 16px 16px 16px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-/* Local buttons (safe even if you already have .btn globally) */
-.project-actions .btn {
-  flex: 1;
-  border-radius: 999px;
-  padding: 10px 12px;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  font-size: 13px;
-  font-weight: 900;
-  text-decoration: none;
-  border: 1px solid var(--p-border);
-  transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease, border-color 220ms ease;
+.projectTech span {
+  padding: 9px 14px;
+  border-radius: 6px;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.projectActions {
+  margin-top: 38px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.projectBtn {
+  min-width: 130px;
+  min-height: 52px;
+  padding: 0 28px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  color: var(--accent);
+  border: 2px solid var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.project-actions .btn.primary {
-  color: var(--p-text);
-  border-color: color-mix(in srgb, var(--eth-green) 30%, var(--p-border));
-  background: linear-gradient(
-    135deg,
-    color-mix(in srgb, var(--eth-green) 18%, var(--p-bg1)),
-    color-mix(in srgb, var(--eth-gold) 14%, var(--p-bg1))
-  );
+.projectBtn:hover {
+  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-4px);
 }
 
-.project-actions .btn.ghost {
-  color: var(--p-text);
-  background: color-mix(in srgb, var(--p-bg1) 70%, transparent);
-}
-
-.project-actions .btn:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--shadow);
-}
-
-.project-actions .btn.primary:hover {
-  border-color: color-mix(in srgb, var(--eth-green) 45%, var(--p-border));
-}
-
-.project-actions .btn.ghost:hover {
-  border-color: color-mix(in srgb, var(--eth-gold) 30%, var(--p-border));
-  background: color-mix(in srgb, var(--p-bg1) 82%, transparent);
-}
-
-.project-actions .btn.disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-/* Focus */
-.project-actions .btn:focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--eth-gold) 60%, transparent);
-  outline-offset: 3px;
-}
-
-/* ---------------------------------------
-   RESPONSIVE
----------------------------------------- */
-@media (max-width: 980px) {
-  .projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 620px) {
-  .projects-grid {
+@media (max-width: 1050px) {
+  .projectShowcase,
+  .projectShowcase.reverse {
     grid-template-columns: 1fr;
   }
 
-  .project-thumb {
-    height: 200px;
+  .projectShowcase.reverse .projectImages,
+  .projectShowcase.reverse .projectContent {
+    order: initial;
+  }
+
+  .projectImages {
+    min-height: 500px;
   }
 }
-/* add to Projects.css */
-.project-click {
-  display: block;
-  text-decoration: none;
-  color: inherit;
+
+@media (max-width: 700px) {
+  .projects {
+    padding: var(--section-padding);
+  }
+
+  .projectsHeader {
+    margin-bottom: 70px;
+  }
+
+  .projectsList {
+    gap: 95px;
+  }
+
+  .projectImages {
+    min-height: auto;
+    display: grid;
+    gap: 18px;
+  }
+
+  .projectImg,
+  .projectImgMain,
+  .projectImgSecond,
+  .projectImgThird {
+    position: static;
+    width: 100%;
+    height: auto;
+  }
+
+  .projectBtn {
+    width: 100%;
+  }
 }

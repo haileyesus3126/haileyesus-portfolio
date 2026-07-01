@@ -1,0 +1,60 @@
+.resumeSection {
+  background: #0f9fb2;
+}
+
+.resumeLink {
+  height: 120px;
+
+  max-width: 1200px;
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+
+  gap: 14px;
+
+  color: #fff;
+  text-decoration: none;
+
+  transition: 0.3s ease;
+}
+
+.resumeLink i {
+  font-size: 42px;
+}
+
+.resumeLink span {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.resumeLink:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.resumeLink:hover i {
+  transform: translateY(-4px);
+}
+
+.resumeLink i {
+  transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+  .resumeLink {
+    height: 95px;
+  }
+
+  .resumeLink i {
+    font-size: 34px;
+  }
+
+  .resumeLink span {
+    font-size: 17px;
+    letter-spacing: 2px;
+  }
+}
